@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "SecuredGuard API",
+		"description": "Coleção de endpoints para teste da API de Escalas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Escalas",
+			"item": [
+				{
+					"name": "Criar Escala",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": \"2024-03-20\",\n    \"turno\": \"MANHA\",\n    \"unidadeId\": \"{{unidadeId}}\",\n    \"localId\": \"{{localId}}\",\n    \"status\": \"EM_SERVICO\",\n    \"rotaId\": \"{{rotaId}}\",\n    \"rondaId\": \"{{rondaId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas"]
+						},
+						"description": "Cria uma nova escala"
+					}
+				},
+				{
+					"name": "Adicionar Funcionário à Escala",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"funcionarioId\": \"{{funcionarioId}}\",\n    \"cargoId\": \"{{cargoId}}\",\n    \"observacao\": \"Observação do funcionário\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas", "{{escalaId}}", "funcionarios"]
+						},
+						"description": "Adiciona um funcionário a uma escala existente"
+					}
+				},
+				{
+					"name": "Atualizar Ordem dos Funcionários",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{funcionario2Id}}\",\n    \"{{funcionario1Id}}\"\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios/ordem",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas", "{{escalaId}}", "funcionarios", "ordem"]
+						},
+						"description": "Atualiza a ordem visual dos funcionários na escala"
+					}
+				},
+				{
+					"name": "Buscar Escalas por Período",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas/periodo?dataInicio=2024-03-01&dataFim=2024-03-31",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas", "periodo"],
+							"query": [
+								{
+									"key": "dataInicio",
+									"value": "2024-03-01"
+								},
+								{
+									"key": "dataFim",
+									"value": "2024-03-31"
+								}
+							]
+						},
+						"description": "Busca escalas dentro de um período específico"
+					}
+				},
+				{
+					"name": "Buscar Escalas por Unidade e Período",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas/unidade/{{unidadeId}}/periodo?dataInicio=2024-03-01&dataFim=2024-03-31",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas", "unidade", "{{unidadeId}}", "periodo"],
+							"query": [
+								{
+									"key": "dataInicio",
+									"value": "2024-03-01"
+								},
+								{
+									"key": "dataFim",
+									"value": "2024-03-31"
+								}
+							]
+						},
+						"description": "Busca escalas de uma unidade específica dentro de um período"
+					}
+				},
+				{
+					"name": "Buscar Funcionários da Escala",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "escalas", "{{escalaId}}", "funcionarios"]
+						},
+						"description": "Busca todos os funcionários de uma escala específica"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "unidadeId",
+			"value": "seu-uuid-da-unidade"
+		},
+		{
+			"key": "localId",
+			"value": "seu-uuid-do-local"
+		},
+		{
+			"key": "funcionarioId",
+			"value": "seu-uuid-do-funcionario"
+		},
+		{
+			"key": "funcionario1Id",
+			"value": "seu-uuid-do-funcionario-1"
+		},
+		{
+			"key": "funcionario2Id",
+			"value": "seu-uuid-do-funcionario-2"
+		},
+		{
+			"key": "cargoId",
+			"value": "seu-uuid-do-cargo"
+		},
+		{
+			"key": "escalaId",
+			"value": "seu-uuid-da-escala"
+		},
+		{
+			"key": "rotaId",
+			"value": "seu-uuid-da-rota"
+		},
+		{
+			"key": "rondaId",
+			"value": "seu-uuid-da-ronda"
+		}
+	]
+} 
