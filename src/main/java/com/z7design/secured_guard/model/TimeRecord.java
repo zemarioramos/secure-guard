@@ -25,38 +25,37 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "time_records")
+@Table(name = "registros_ponto")
 public class TimeRecord {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "funcionario_id", nullable = false)
     private Employee employee;
     
-    @Column(nullable = false)
+    @Column(name = "data_registro", nullable = false)
     private LocalDate recordDate;
     
-    @Column(nullable = false)
+    @Column(name = "hora_entrada")
     private LocalTime entryTime;
     
-    @Column(nullable = false)
+    @Column(name = "hora_saida")
     private LocalTime exitTime;
     
-    @Column
+    @Column(name = "hora_entrada_almoco")
     private LocalTime entryLunchTime;
     
-    @Column
+    @Column(name = "hora_saida_almoco")
     private LocalTime exitLunchTime;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private TimeRecordStatus status;
     
-    @Column(length = 500)
+    @Column(name = "justificativa")
     private String justification;
     
     @CreationTimestamp

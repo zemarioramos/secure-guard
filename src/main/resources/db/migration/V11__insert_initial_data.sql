@@ -1,5 +1,5 @@
 -- Inserção de usuário administrador
-INSERT INTO users (id, username, password, email, full_name, role, active)
+INSERT INTO users (id, username, password, email, name, role, status, active)
 VALUES (
     '00000000-0000-0000-0000-000000000001',
     'admin',
@@ -7,6 +7,7 @@ VALUES (
     'admin@example.com',
     'Administrador',
     'ADMIN',
+    'ACTIVE',
     true
 );
 

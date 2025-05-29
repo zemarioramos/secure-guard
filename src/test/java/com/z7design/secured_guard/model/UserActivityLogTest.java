@@ -14,7 +14,7 @@ class UserActivityLogTest {
     @BeforeEach
     void setUp() {
         activityLog = new UserActivityLog();
-        activityLog.setId(UUID.randomUUID());
+        activityLog.setId(1L);
         activityLog.setUsername("testuser");
         activityLog.setAction("LOGIN");
         activityLog.setDetails("User logged in successfully");

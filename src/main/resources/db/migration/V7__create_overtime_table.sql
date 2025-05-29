@@ -1,6 +1,6 @@
 CREATE TABLE overtime (
-    id BIGSERIAL PRIMARY KEY,
-    employee_id BIGINT NOT NULL,
+    id UUID PRIMARY KEY,
+    employee_id UUID NOT NULL,
     overtime_date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE overtime (
     type VARCHAR(20) NOT NULL,
     reason VARCHAR(500) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    approved_by BIGINT,
+    approved_by UUID,
     approval_date TIMESTAMP,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,

@@ -3,6 +3,7 @@ package com.z7design.secured_guard.model;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -43,15 +44,15 @@ public class Position {
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<>();
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
-    private List<Benefit> benefits;
+    private List<Benefit> benefits = new ArrayList<>();
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
-    private List<EPI> epis;
+    private List<EPI> epis = new ArrayList<>();
     
     @CreationTimestamp
     private LocalDateTime createdAt;

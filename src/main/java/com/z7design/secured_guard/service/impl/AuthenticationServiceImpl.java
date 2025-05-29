@@ -3,7 +3,10 @@ package com.z7design.secured_guard.service.impl;
 import com.z7design.secured_guard.dto.AuthenticationRequest;
 import com.z7design.secured_guard.dto.AuthenticationResponse;
 import com.z7design.secured_guard.dto.RegisterRequest;
+import com.z7design.secured_guard.dto.UserResponse;
 import com.z7design.secured_guard.model.User;
+import com.z7design.secured_guard.model.enums.UserRole;
+import com.z7design.secured_guard.model.enums.UserStatus;
 import com.z7design.secured_guard.repository.UserRepository;
 import com.z7design.secured_guard.security.JwtService;
 import com.z7design.secured_guard.service.AuthenticationService;
@@ -37,8 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return AuthenticationResponse.builder()
             .token(token)
-            .username(user.getUsername())
-            .role(user.getRole())
+            .user(mapToUserResponse(user))
             .build();
     }
 
@@ -52,14 +54,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new RuntimeException("Email already exists");
         }
 
-        User user = User.builder()
-            .username(request.getUsername())
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .fullName(request.getFullName())
-            .role("USER")
-            .status("ATIVO")
-            .build();
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setName(request.getFullName());
+        user.setRole(UserRole.VIGILANTE);
+        user.setStatus(UserStatus.ACTIVE);
 
         userRepository.save(user);
 
@@ -67,8 +68,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return AuthenticationResponse.builder()
             .token(token)
+            .user(mapToUserResponse(user))
+            .build();
+    }
+
+    private UserResponse mapToUserResponse(User user) {
+        return UserResponse.builder()
             .username(user.getUsername())
-            .role(user.getRole())
+            .email(user.getEmail())
+            .fullName(user.getName())
+            .role(user.getRole().name())
             .build();
     }
 } 

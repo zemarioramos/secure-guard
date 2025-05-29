@@ -3,6 +3,7 @@ package com.z7design.secured_guard.model;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -38,7 +39,7 @@ public class Training {
     
     @OneToMany(mappedBy = "training")
     @JsonIgnoreProperties("training")
-    private List<EmployeeCertification> certifications;
+    private List<EmployeeCertification> certifications = new ArrayList<>();
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

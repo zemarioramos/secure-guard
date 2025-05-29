@@ -31,9 +31,9 @@ class PerformanceEvaluationTest {
         evaluation.setEmployee(employee);
         evaluation.setEvaluator(evaluator);
         evaluation.setEvaluationDate(LocalDate.now());
-        evaluation.setType(EvaluationType.ANNUAL);
+        evaluation.setEvaluationType(EvaluationType.ANNUAL);
         evaluation.setStatus(EvaluationStatus.PENDING);
-        evaluation.setScore(4.5);
+        evaluation.setScore(4);
         evaluation.setComments("Test comments");
     }
 
@@ -43,9 +43,9 @@ class PerformanceEvaluationTest {
         assertEquals(employee, evaluation.getEmployee());
         assertEquals(evaluator, evaluation.getEvaluator());
         assertEquals(LocalDate.now(), evaluation.getEvaluationDate());
-        assertEquals(EvaluationType.ANNUAL, evaluation.getType());
+        assertEquals(EvaluationType.ANNUAL, evaluation.getEvaluationType());
         assertEquals(EvaluationStatus.PENDING, evaluation.getStatus());
-        assertEquals(4.5, evaluation.getScore());
+        assertEquals(4, evaluation.getScore());
         assertEquals("Test comments", evaluation.getComments());
     }
 
@@ -57,8 +57,8 @@ class PerformanceEvaluationTest {
 
     @Test
     void whenUpdateScore_thenScoreIsUpdated() {
-        evaluation.setScore(5.0);
-        assertEquals(5.0, evaluation.getScore());
+        evaluation.setScore(5);
+        assertEquals(5, evaluation.getScore());
     }
 
     @Test

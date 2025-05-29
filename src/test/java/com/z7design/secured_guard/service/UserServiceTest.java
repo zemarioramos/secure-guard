@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
+import com.z7design.secured_guard.model.enums.UserRole;
+import com.z7design.secured_guard.model.enums.UserStatus;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -40,9 +42,9 @@ class UserServiceTest {
                 .username("testuser")
                 .email("test@example.com")
                 .password("encodedPassword")
-                .fullName("Test User")
-                .role("USER")
-                .status("ATIVO")
+                .name("Test User")
+                .role(UserRole.VIGILANTE)
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,6 +57,7 @@ class UnitServiceTest {
                 .email("test@example.com")
                 .parent(parentUnit)
                 .build();
+        unit.setEmployees(new java.util.ArrayList<>());
 
         employee = new Employee();
         employee.setId(UUID.randomUUID());
@@ -145,7 +147,8 @@ class UnitServiceTest {
     @Test
     void whenDeleteUnit_thenUnitIsDeleted() {
         when(unitRepository.findById(unitId)).thenReturn(Optional.of(unit));
-        when(unitRepository.hasEmployees(unitId)).thenReturn(false);
+        unit.setEmployees(Collections.emptyList());
+        doNothing().when(unitRepository).delete(unit);
 
         unitService.delete(unitId);
 
@@ -163,7 +166,7 @@ class UnitServiceTest {
     @Test
     void whenDeleteUnitWithEmployees_thenThrowsException() {
         when(unitRepository.findById(unitId)).thenReturn(Optional.of(unit));
-        when(unitRepository.hasEmployees(unitId)).thenReturn(true);
+        unit.setEmployees(Arrays.asList(employee));
 
         assertThrows(BusinessException.class, () -> unitService.delete(unitId));
         verify(unitRepository, never()).delete(any(Unit.class));
@@ -225,7 +228,7 @@ class UnitServiceTest {
         List<Unit> units = Arrays.asList(unit);
         when(unitRepository.findByAddressContaining(unit.getAddress())).thenReturn(units);
 
-        List<Unit> foundUnits = unitService.findByAddress(unit.getAddress());
+        List<Unit> foundUnits = unitService.findByAddressContaining(unit.getAddress());
 
         assertNotNull(foundUnits);
         assertEquals(1, foundUnits.size());
@@ -253,6 +256,7 @@ class UnitServiceTest {
 
         assertNotNull(foundUnits);
         assertEquals(1, foundUnits.size());
+        assertEquals(unit.getId(), foundUnits.get(0).getId());
     }
 
     @Test
@@ -260,15 +264,13 @@ class UnitServiceTest {
     void whenCreateUnitWithParent_thenParentChildRelationshipIsEstablished() {
         when(unitRepository.existsByName(unit.getName())).thenReturn(false);
         when(unitRepository.existsByEmail(unit.getEmail())).thenReturn(false);
-        when(unitRepository.findById(parentUnit.getId())).thenReturn(Optional.of(parentUnit));
         when(unitRepository.save(any(Unit.class))).thenReturn(unit);
+        when(unitRepository.findById(parentId)).thenReturn(Optional.of(parentUnit));
 
-        unit.setParent(parentUnit);
         Unit createdUnit = unitService.create(unit);
 
         assertNotNull(createdUnit);
-        assertNotNull(createdUnit.getParent());
-        assertEquals(parentUnit.getId(), createdUnit.getParent().getId());
+        assertEquals(parentId, createdUnit.getParent().getId());
         verify(unitRepository).save(unit);
     }
 } 

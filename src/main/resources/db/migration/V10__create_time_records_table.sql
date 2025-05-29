@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS time_records (
-    id BIGSERIAL PRIMARY KEY,
-    employee_id BIGINT NOT NULL,
+    id UUID PRIMARY KEY,
+    employee_id UUID NOT NULL,
     record_date DATE NOT NULL,
     entry_time TIME,
     exit_time TIME,

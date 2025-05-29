@@ -30,7 +30,7 @@ public class OvertimeService {
     public Overtime create(Overtime overtime) {
         validateOvertime(overtime);
         calculateTotalHours(overtime);
-        overtime.setStatus(OvertimeStatus.PENDENTE);
+        overtime.setStatus(OvertimeStatus.PENDING);
         return overtimeRepository.save(overtime);
     }
     
@@ -55,7 +55,7 @@ public class OvertimeService {
         Overtime overtime = findById(id);
         User approver = userService.findById(approvedBy)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + approvedBy));
-        overtime.setStatus(OvertimeStatus.APROVADO);
+        overtime.setStatus(OvertimeStatus.APPROVED);
         overtime.setApprovedBy(approver);
         overtime.setApprovalDate(LocalDateTime.now());
         return overtimeRepository.save(overtime);
@@ -64,7 +64,7 @@ public class OvertimeService {
     @Transactional
     public Overtime reject(UUID id, String justification) {
         Overtime overtime = findById(id);
-        overtime.setStatus(OvertimeStatus.REJEITADO);
+        overtime.setStatus(OvertimeStatus.REJECTED);
         overtime.setJustification(justification);
         return overtimeRepository.save(overtime);
     }
@@ -72,7 +72,7 @@ public class OvertimeService {
     @Transactional
     public Overtime compensate(UUID id) {
         Overtime overtime = findById(id);
-        overtime.setStatus(OvertimeStatus.COMPENSADO);
+        overtime.setStatus(OvertimeStatus.COMPENSATED);
         return overtimeRepository.save(overtime);
     }
     
@@ -99,23 +99,23 @@ public class OvertimeService {
     
     private void validateOvertime(Overtime overtime) {
         if (overtime.getOvertimeDate() == null) {
-            throw new IllegalArgumentException("Data do banco de horas é obrigatória");
+            throw new IllegalArgumentException("Overtime date is required");
         }
         
         if (overtime.getStartTime() == null || overtime.getEndTime() == null) {
-            throw new IllegalArgumentException("Horário de início e fim são obrigatórios");
+            throw new IllegalArgumentException("Start and end times are required");
         }
         
         if (overtime.getStartTime().isAfter(overtime.getEndTime())) {
-            throw new IllegalArgumentException("Horário de início não pode ser posterior ao horário de fim");
+            throw new IllegalArgumentException("Start time cannot be after end time");
         }
         
         if (overtime.getType() == null) {
-            throw new IllegalArgumentException("Tipo de banco de horas é obrigatório");
+            throw new IllegalArgumentException("Overtime type is required");
         }
         
         if (overtime.getReason() == null || overtime.getReason().trim().isEmpty()) {
-            throw new IllegalArgumentException("Motivo do banco de horas é obrigatório");
+            throw new IllegalArgumentException("Overtime reason is required");
         }
     }
     

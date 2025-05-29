@@ -55,20 +55,20 @@ public class PerformanceEvaluationService {
     @Transactional
     public PerformanceEvaluation reviewEvaluation(Long id) {
         PerformanceEvaluation evaluation = findById(id);
-        evaluation.setStatus(EvaluationStatus.REVIEWED);
+        evaluation.setStatus(EvaluationStatus.IN_PROGRESS);
         return evaluationRepository.save(evaluation);
     }
     
     @Transactional
     public PerformanceEvaluation approveEvaluation(Long id) {
         PerformanceEvaluation evaluation = findById(id);
-        evaluation.setStatus(EvaluationStatus.APPROVED);
+        evaluation.setStatus(EvaluationStatus.COMPLETED);
         return evaluationRepository.save(evaluation);
     }
     
     public PerformanceEvaluation findById(Long id) {
         return evaluationRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Avaliação de desempenho não encontrada"));
+            .orElseThrow(() -> new ResourceNotFoundException("Performance evaluation not found"));
     }
     
     public List<PerformanceEvaluation> findByEmployeeId(Long employeeId) {
@@ -89,15 +89,15 @@ public class PerformanceEvaluationService {
     
     private void validateEvaluation(PerformanceEvaluation evaluation) {
         if (evaluation.getEvaluationDate() == null) {
-            throw new IllegalArgumentException("Data da avaliação é obrigatória");
+            throw new IllegalArgumentException("Evaluation date is required");
         }
         
         if (evaluation.getScore() != null && (evaluation.getScore() < 0 || evaluation.getScore() > 10)) {
-            throw new IllegalArgumentException("Pontuação deve estar entre 0 e 10");
+            throw new IllegalArgumentException("Score must be between 0 and 10");
         }
         
-        if (evaluation.getEvaluationType() == null || evaluation.getEvaluationType().trim().isEmpty()) {
-            throw new IllegalArgumentException("Tipo de avaliação é obrigatório");
+        if (evaluation.getEvaluationType() == null) {
+            throw new IllegalArgumentException("Evaluation type is required");
         }
     }
 } 

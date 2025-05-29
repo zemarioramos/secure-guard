@@ -22,7 +22,7 @@ class TimeRecordTest {
         employee.setName("Test Employee");
 
         timeRecord = new TimeRecord();
-        timeRecord.setId(UUID.randomUUID());
+        timeRecord.setId(1L);
         timeRecord.setEmployee(employee);
         timeRecord.setRecordDate(LocalDate.now());
         timeRecord.setEntryTime(LocalTime.of(9, 0));

@@ -27,6 +27,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "notifications")
 public class Notification {
     
@@ -36,25 +39,28 @@ public class Notification {
     
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
     private User user;
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NotificationType type;
+    private String title;
     
     @Column(nullable = false)
     private String message;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NotificationStatus status;
+    private NotificationType type;
     
-    private LocalDateTime readAt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NotificationStatus status;
     
     @CreationTimestamp
     private LocalDateTime createdAt;
     
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    
+    @Column(name = "read_at")
+    private LocalDateTime readAt;
 } 

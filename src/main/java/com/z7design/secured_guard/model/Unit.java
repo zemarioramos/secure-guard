@@ -3,6 +3,7 @@ package com.z7design.secured_guard.model;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -50,22 +51,22 @@ public class Unit {
     
     @OneToMany(mappedBy = "parent")
     @JsonIgnoreProperties("parent")
-    private List<Unit> children;
+    private List<Unit> children = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties("unit")
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties("unit")
-    private List<Position> positions;
+    private List<Position> positions = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties({"position", "unit", "documents", "benefits", "scaleHistory", "occurrences", "payrolls", "epis"})
-    private List<Payroll> payrolls;
+    private List<Payroll> payrolls = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
-    private List<Location> locations;
+    private List<Location> locations = new ArrayList<>();
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

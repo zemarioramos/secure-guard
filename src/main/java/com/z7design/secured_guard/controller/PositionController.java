@@ -30,7 +30,7 @@ public class PositionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        positionService.deleteById(id);
+        positionService.delete(id);
         return ResponseEntity.ok().build();
     }
 

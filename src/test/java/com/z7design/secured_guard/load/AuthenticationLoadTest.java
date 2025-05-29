@@ -24,6 +24,8 @@ import com.z7design.secured_guard.dto.LoginRequest;
 import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
+import com.z7design.secured_guard.model.enums.UserRole;
+import com.z7design.secured_guard.model.enums.UserStatus;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,9 +57,9 @@ class AuthenticationLoadTest {
                     .username("testuser" + i)
                     .email("test" + i + "@example.com")
                     .password("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG") // "password"
-                    .fullName("Test User " + i)
-                    .role("USER")
-                    .status("ATIVO")
+                    .name("Test User " + i)
+                    .role(UserRole.VIGILANTE)
+                    .status(UserStatus.ACTIVE)
                     .build();
 
             userRepository.save(user);

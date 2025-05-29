@@ -31,6 +31,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
     
@@ -100,7 +103,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return status != UserStatus.LOCKED;
+        return status != UserStatus.BLOCKED;
     }
 
     @Override

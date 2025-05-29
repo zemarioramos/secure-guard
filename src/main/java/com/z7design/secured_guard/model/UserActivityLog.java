@@ -2,28 +2,25 @@ package com.z7design.secured_guard.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "user_activity_logs")
+@Table(name = "logs_atividade_usuario")
 public class UserActivityLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "usuario")
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "acao")
     private String action;
 
-    @Column(length = 500)
+    @Column(name = "detalhes")
     private String details;
 
-    @CreationTimestamp
+    @Column(name = "data_hora")
     private LocalDateTime timestamp;
 } 

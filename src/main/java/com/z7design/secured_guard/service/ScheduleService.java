@@ -35,6 +35,49 @@ public class ScheduleService {
     private final PatrolRepository patrolRepository;
 
     @Transactional
+    public Schedule create(Schedule schedule) {
+        return scheduleRepository.save(schedule);
+    }
+
+    @Transactional
+    public Schedule update(UUID id, Schedule schedule) {
+        Schedule existingSchedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Schedule not found"));
+        
+        existingSchedule.setScheduleDate(schedule.getScheduleDate());
+        existingSchedule.setShift(schedule.getShift());
+        existingSchedule.setLocation(schedule.getLocation());
+        existingSchedule.setStatus(schedule.getStatus());
+        existingSchedule.setRoute(schedule.getRoute());
+        existingSchedule.setPatrol(schedule.getPatrol());
+        existingSchedule.setObservations(schedule.getObservations());
+        
+        return scheduleRepository.save(existingSchedule);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        scheduleRepository.deleteById(id);
+    }
+
+    public Schedule findById(UUID id) {
+        return scheduleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Schedule not found"));
+    }
+
+    public List<Schedule> findByEmployeeId(UUID employeeId) {
+        return scheduleRepository.findByEmployeeId(employeeId);
+    }
+
+    public List<Schedule> findByDate(LocalDate date) {
+        return scheduleRepository.findByScheduleDate(date);
+    }
+
+    public List<Schedule> findAll() {
+        return scheduleRepository.findAll();
+    }
+
+    @Transactional
     public Schedule createSchedule(ScheduleDTO dto) {
         Location location = locationRepository.findById(dto.getLocationId())
                 .orElseThrow(() -> new EntityNotFoundException("Location not found"));
@@ -68,9 +111,6 @@ public class ScheduleService {
         EmployeeSchedule employeeSchedule = new EmployeeSchedule();
         employeeSchedule.setSchedule(schedule);
         employeeSchedule.setPosition(position);
-        employeeSchedule.setScheduleDate(dto.getScheduleDate());
-        employeeSchedule.setShift(dto.getShift());
-        employeeSchedule.setStatus(dto.getStatus());
         employeeSchedule.setObservations(dto.getObservations());
 
         return employeeScheduleRepository.save(employeeSchedule);

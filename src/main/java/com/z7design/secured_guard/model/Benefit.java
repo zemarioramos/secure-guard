@@ -1,7 +1,9 @@
 package com.z7design.secured_guard.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -39,13 +41,13 @@ public class Benefit {
     private String description;
     
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     
     @Column(nullable = false)
-    private Double value;
+    private BigDecimal value;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

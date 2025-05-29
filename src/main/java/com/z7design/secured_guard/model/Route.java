@@ -34,6 +34,10 @@ public class Route {
     @ManyToOne
     @JoinColumn(name = "unit_id", nullable = false)
     private Unit unit;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
     
     @Column(name = "estimated_duration")
     private Duration estimatedDuration;

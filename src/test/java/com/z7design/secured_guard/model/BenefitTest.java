@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
+import java.math.BigDecimal;
 
 class BenefitTest {
 
@@ -22,7 +23,7 @@ class BenefitTest {
                 .id(UUID.randomUUID())
                 .name("Test Benefit")
                 .description("Test Description")
-                .value(1000.0)
+                .value(new BigDecimal("1000.00"))
                 .position(position)
                 .build();
     }
@@ -32,7 +33,7 @@ class BenefitTest {
         assertNotNull(benefit);
         assertEquals("Test Benefit", benefit.getName());
         assertEquals("Test Description", benefit.getDescription());
-        assertEquals(1000.0, benefit.getValue());
+        assertEquals(new BigDecimal("1000.00"), benefit.getValue());
         assertEquals(position, benefit.getPosition());
     }
 
@@ -45,7 +46,7 @@ class BenefitTest {
 
     @Test
     void whenUpdateBenefitValue_thenValueIsUpdated() {
-        double newValue = 1500.0;
+        BigDecimal newValue = new BigDecimal("1500.00");
         benefit.setValue(newValue);
         assertEquals(newValue, benefit.getValue());
     }

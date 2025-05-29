@@ -1,6 +1,5 @@
 package com.z7design.secured_guard.controller;
 
-import com.z7design.secured_guard.dto.UserDTO;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,28 +29,28 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
-        User user = userService.createUser(userDTO);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> create(@RequestBody User user) {
+        User created = userService.create(user);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable UUID id, @RequestBody User user) {
-        return userService.findById(id)
-                .map(existingUser -> {
-                    user.setId(id);
-                    return ResponseEntity.ok(userService.save(user));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            User updated = userService.update(id, user);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        return userService.findById(id)
-                .map(user -> {
-                    userService.deleteById(id);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            userService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 } 

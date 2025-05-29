@@ -24,7 +24,7 @@ class NotificationTest {
         notification = new Notification();
         notification.setId(UUID.randomUUID());
         notification.setUser(user);
-        notification.setType(NotificationType.ALERT);
+        notification.setType(NotificationType.SCHEDULE);
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setMessage("This is a test notification");
     }
@@ -33,7 +33,7 @@ class NotificationTest {
     void whenCreateNotification_thenNotificationIsCreated() {
         assertNotNull(notification);
         assertEquals(user, notification.getUser());
-        assertEquals(NotificationType.ALERT, notification.getType());
+        assertEquals(NotificationType.SCHEDULE, notification.getType());
         assertEquals(NotificationStatus.UNREAD, notification.getStatus());
         assertEquals("This is a test notification", notification.getMessage());
         assertNotNull(notification.getCreatedAt());
@@ -57,7 +57,7 @@ class NotificationTest {
 
     @Test
     void whenUpdateType_thenTypeIsUpdated() {
-        notification.setType(NotificationType.WARNING);
-        assertEquals(NotificationType.WARNING, notification.getType());
+        notification.setType(NotificationType.TIME_RECORD);
+        assertEquals(NotificationType.TIME_RECORD, notification.getType());
     }
 } 

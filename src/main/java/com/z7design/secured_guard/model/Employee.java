@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,6 +26,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Data
 @Entity
 @Table(name = "employees")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
     
     @Id
@@ -110,30 +113,30 @@ public class Employee {
     // Documentos
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Document> documents;
+    private List<Document> documents = new ArrayList<>();
 
     // Benefícios
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Benefit> benefits;
+    private List<Benefit> benefits = new ArrayList<>();
 
     // Histórico de Escalas
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Schedule> schedules;
+    private List<Schedule> schedules = new ArrayList<>();
 
     // Ocorrências
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Occurrence> occurrences;
+    private List<Occurrence> occurrences = new ArrayList<>();
 
     // Holerites
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference("employee-payrolls")
-    private List<Payroll> payrolls;
+    private List<Payroll> payrolls = new ArrayList<>();
 
     // EPIs
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<EPI> epis;
+    private List<EPI> epis = new ArrayList<>();
 } 

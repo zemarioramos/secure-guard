@@ -1,6 +1,6 @@
 package com.z7design.secured_guard.dto;
 
-import com.z7design.secured_guard.model.enums.StatusEscala;
+import com.z7design.secured_guard.model.enums.ScheduleStatus;
 import com.z7design.secured_guard.model.enums.Turno;
 import lombok.Data;
 
@@ -14,7 +14,7 @@ public class EscalaDTO {
     private Turno turno;
     private UUID unidadeId;
     private UUID localId;
-    private StatusEscala status;
+    private ScheduleStatus status;
     private UUID rotaId;
     private UUID rondaId;
 } 

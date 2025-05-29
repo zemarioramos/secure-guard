@@ -18,11 +18,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.z7design.secured_guard.dto.AuthenticationResponse;
-import com.z7design.secured_guard.dto.LoginRequest;
+import com.z7design.secured_guard.dto.AuthenticationRequest;
 import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
-import com.z7design.secured_guard.security.JwtTokenProvider;
+import com.z7design.secured_guard.security.JwtService;
+import com.z7design.secured_guard.model.enums.UserRole;
+import com.z7design.secured_guard.model.enums.UserStatus;
+import com.z7design.secured_guard.service.impl.AuthenticationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
@@ -34,13 +37,13 @@ class AuthenticationServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private JwtTokenProvider jwtTokenProvider;
+    private JwtService jwtService;
 
     @Mock
     private AuthenticationManager authenticationManager;
 
     @InjectMocks
-    private AuthenticationService authenticationService;
+    private AuthenticationServiceImpl authenticationService;
 
     private User testUser;
     private String testToken;
@@ -53,9 +56,9 @@ class AuthenticationServiceTest {
                 .username("testuser")
                 .email("test@example.com")
                 .password("encodedPassword")
-                .fullName("Test User")
-                .role("USER")
-                .status("ATIVO")
+                .name("Test User")
+                .role(UserRole.VIGILANTE)
+                .status(UserStatus.ACTIVE)
                 .build();
 
         testToken = "test.jwt.token";
@@ -64,8 +67,8 @@ class AuthenticationServiceTest {
                 .user(com.z7design.secured_guard.dto.UserResponse.builder()
                         .username(testUser.getUsername())
                         .email(testUser.getEmail())
-                        .fullName(testUser.getFullName())
-                        .role(testUser.getRole())
+                        .fullName(testUser.getName())
+                        .role(testUser.getRole().name())
                         .build())
                 .build();
     }
@@ -73,37 +76,37 @@ class AuthenticationServiceTest {
     @Test
     void whenLoginWithValidCredentials_thenReturnToken() {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("testuser", "password");
+        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "password");
         Authentication authentication = mock(Authentication.class);
         
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(testUser);
         when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(testUser));
-        when(jwtTokenProvider.generateToken(any(User.class))).thenReturn(testToken);
+        when(jwtService.generateToken(any(User.class))).thenReturn(testToken);
 
         // Act
-        AuthenticationResponse result = authenticationService.login(loginRequest);
+        AuthenticationResponse result = authenticationService.authenticate(loginRequest);
 
         // Assert
         assertNotNull(result);
         assertEquals(testToken, result.getToken());
         assertEquals(testUser.getUsername(), result.getUser().getUsername());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtTokenProvider).generateToken(testUser);
+        verify(jwtService).generateToken(testUser);
     }
 
     @Test
     void whenLoginWithInvalidCredentials_thenThrowException() {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("testuser", "wrongpassword");
+        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "wrongpassword");
         
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new RuntimeException("Invalid credentials"));
 
         // Act & Assert
         assertThrows(RuntimeException.class, () -> {
-            authenticationService.login(loginRequest);
+            authenticationService.authenticate(loginRequest);
         });
     }
 
@@ -121,7 +124,7 @@ class AuthenticationServiceTest {
         when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtTokenProvider.generateToken(any(User.class))).thenReturn(testToken);
+        when(jwtService.generateToken(any(User.class))).thenReturn(testToken);
 
         // Act
         AuthenticationResponse result = authenticationService.register(registerRequest);

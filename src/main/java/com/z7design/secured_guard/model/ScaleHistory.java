@@ -13,9 +13,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import com.z7design.secured_guard.model.enums.StatusEscala;
-import com.z7design.secured_guard.model.enums.Turno;
-
 @Data
 @Entity
 @Table(name = "scale_histories")
@@ -38,7 +35,7 @@ public class ScaleHistory {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusEscala status;
+    private ScheduleStatus status;
 
     @Column(length = 500)
     private String notes;

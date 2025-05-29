@@ -54,7 +54,7 @@ public class NotificationService {
     
     public Notification findById(Long id) {
         return notificationRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Notificação não encontrada"));
+            .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
     }
     
     public List<Notification> findByUserId(Long userId) {
@@ -75,15 +75,15 @@ public class NotificationService {
     
     private void validateNotification(Notification notification) {
         if (notification.getUser() == null) {
-            throw new IllegalArgumentException("Usuário é obrigatório");
+            throw new IllegalArgumentException("User is required");
         }
         
         if (notification.getType() == null) {
-            throw new IllegalArgumentException("Tipo de notificação é obrigatório");
+            throw new IllegalArgumentException("Notification type is required");
         }
         
         if (notification.getMessage() == null || notification.getMessage().trim().isEmpty()) {
-            throw new IllegalArgumentException("Mensagem da notificação é obrigatória");
+            throw new IllegalArgumentException("Notification message is required");
         }
     }
 } 

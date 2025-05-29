@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
+import java.math.BigDecimal;
 
 class PositionTest {
 
@@ -25,6 +26,7 @@ class PositionTest {
                 .name("Test Position")
                 .description("Test Description")
                 .unit(unit)
+                .baseSalary(1000.0)
                 .build();
 
         employee = new Employee();
@@ -34,7 +36,7 @@ class PositionTest {
         benefit = Benefit.builder()
                 .id(UUID.randomUUID())
                 .name("Test Benefit")
-                .value(1000.0)
+                .value(BigDecimal.valueOf(1000.0))
                 .build();
     }
 

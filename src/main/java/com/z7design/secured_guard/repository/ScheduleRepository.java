@@ -11,4 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
     List<Schedule> findByScheduleDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Schedule> findByEmployeeId(UUID employeeId);
+    List<Schedule> findByScheduleDate(LocalDate date);
 } 

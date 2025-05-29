@@ -19,6 +19,8 @@ import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
 import com.z7design.secured_guard.security.JwtTokenProvider;
+import com.z7design.secured_guard.model.enums.UserRole;
+import com.z7design.secured_guard.model.enums.UserStatus;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,9 +49,9 @@ class AuthenticationIntegrationTest {
                 .username("testuser")
                 .email("test@example.com")
                 .password("$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG") // "password"
-                .fullName("Test User")
-                .role("USER")
-                .status("ATIVO")
+                .name("Test User")
+                .role(UserRole.VIGILANTE)
+                .status(UserStatus.ACTIVE)
                 .build();
 
         userRepository.save(testUser);
@@ -68,7 +70,7 @@ class AuthenticationIntegrationTest {
                 .andExpect(jsonPath("$.token").exists())
                 .andExpect(jsonPath("$.user.username").value(testUser.getUsername()))
                 .andExpect(jsonPath("$.user.email").value(testUser.getEmail()))
-                .andExpect(jsonPath("$.user.fullName").value(testUser.getFullName()))
+                .andExpect(jsonPath("$.user.fullName").value(testUser.getName()))
                 .andExpect(jsonPath("$.user.role").value(testUser.getRole()));
     }
 

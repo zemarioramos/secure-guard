@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.z7design.secured_guard.config.JwtConfig;
-import com.z7design.secured_guard.service.JwtService;
+import com.z7design.secured_guard.security.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

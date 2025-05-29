@@ -25,12 +25,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {
@@ -61,6 +63,7 @@ class ScheduleServiceTest {
     private UUID routeId;
     private UUID patrolId;
     private UUID scheduleId;
+    private UUID employeeId;
 
     @BeforeEach
     void setUp() {
@@ -69,6 +72,7 @@ class ScheduleServiceTest {
         routeId = UUID.randomUUID();
         patrolId = UUID.randomUUID();
         scheduleId = UUID.randomUUID();
+        employeeId = UUID.randomUUID();
     }
 
     @Test
@@ -127,7 +131,108 @@ class ScheduleServiceTest {
 
         Schedule schedule = new Schedule();
         schedule.setId(scheduleId);
+        Position position = new Position();
+        position.setId(positionId);
 
-        // ... rest of the test implementation
+        when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(schedule));
+        when(positionRepository.findById(positionId)).thenReturn(Optional.of(position));
+        when(employeeScheduleRepository.save(any(EmployeeSchedule.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Act
+        EmployeeSchedule result = scheduleService.createEmployeeSchedule(dto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(schedule, result.getSchedule());
+        assertEquals(position, result.getPosition());
+    }
+
+    @Test
+    void findByEmployeeId_ShouldReturnSchedules() {
+        // Arrange
+        List<Schedule> expectedSchedules = Arrays.asList(
+            new Schedule(), new Schedule()
+        );
+        when(scheduleRepository.findByEmployeeId(employeeId)).thenReturn(expectedSchedules);
+
+        // Act
+        List<Schedule> result = scheduleService.findByEmployeeId(employeeId);
+
+        // Assert
+        assertEquals(expectedSchedules, result);
+        verify(scheduleRepository).findByEmployeeId(employeeId);
+    }
+
+    @Test
+    void findByDate_ShouldReturnSchedules() {
+        // Arrange
+        LocalDate date = LocalDate.now();
+        List<Schedule> expectedSchedules = Arrays.asList(
+            new Schedule(), new Schedule()
+        );
+        when(scheduleRepository.findByScheduleDate(date)).thenReturn(expectedSchedules);
+
+        // Act
+        List<Schedule> result = scheduleService.findByDate(date);
+
+        // Assert
+        assertEquals(expectedSchedules, result);
+        verify(scheduleRepository).findByScheduleDate(date);
+    }
+
+    @Test
+    void findAll_ShouldReturnAllSchedules() {
+        // Arrange
+        List<Schedule> expectedSchedules = Arrays.asList(
+            new Schedule(), new Schedule()
+        );
+        when(scheduleRepository.findAll()).thenReturn(expectedSchedules);
+
+        // Act
+        List<Schedule> result = scheduleService.findAll();
+
+        // Assert
+        assertEquals(expectedSchedules, result);
+        verify(scheduleRepository).findAll();
+    }
+
+    @Test
+    void update_ShouldUpdateScheduleSuccessfully() {
+        // Arrange
+        Schedule existingSchedule = new Schedule();
+        existingSchedule.setId(scheduleId);
+        existingSchedule.setScheduleDate(LocalDate.now());
+        existingSchedule.setShift(Shift.MORNING);
+
+        Schedule updatedSchedule = new Schedule();
+        updatedSchedule.setScheduleDate(LocalDate.now().plusDays(1));
+        updatedSchedule.setShift(Shift.NIGHT);
+
+        when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(existingSchedule));
+        when(scheduleRepository.save(any(Schedule.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Act
+        Schedule result = scheduleService.update(scheduleId, updatedSchedule);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(updatedSchedule.getScheduleDate(), result.getScheduleDate());
+        assertEquals(updatedSchedule.getShift(), result.getShift());
+    }
+
+    @Test
+    void delete_ShouldDeleteSchedule() {
+        // Arrange
+        Schedule schedule = new Schedule();
+        schedule.setId(scheduleId);
+
+        when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(schedule));
+        doNothing().when(scheduleRepository).delete(schedule);
+
+        // Act
+        scheduleService.delete(scheduleId);
+
+        // Assert
+        verify(scheduleRepository).delete(schedule);
     }
 } 

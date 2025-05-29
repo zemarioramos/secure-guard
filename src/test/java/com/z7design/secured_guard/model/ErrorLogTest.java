@@ -14,7 +14,7 @@ class ErrorLogTest {
     @BeforeEach
     void setUp() {
         errorLog = new ErrorLog();
-        errorLog.setId(UUID.randomUUID());
+        errorLog.setId(1L);
         errorLog.setMessage("Test error message");
         errorLog.setEndpoint("/api/test");
         errorLog.setStackTrace("Test stack trace");

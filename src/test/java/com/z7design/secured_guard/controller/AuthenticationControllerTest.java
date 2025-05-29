@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.z7design.secured_guard.dto.AuthenticationResponse;
-import com.z7design.secured_guard.dto.LoginRequest;
+import com.z7design.secured_guard.dto.AuthenticationRequest;
 import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.dto.UserResponse;
 import com.z7design.secured_guard.service.AuthenticationService;
@@ -57,8 +57,8 @@ class AuthenticationControllerTest {
     @Test
     void whenLoginWithValidCredentials_thenReturnToken() throws Exception {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("testuser", "password");
-        when(authenticationService.login(any(LoginRequest.class))).thenReturn(testAuthResponse);
+        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "password");
+        when(authenticationService.authenticate(any(AuthenticationRequest.class))).thenReturn(testAuthResponse);
 
         // Act & Assert
         mockMvc.perform(post("/api/auth/login")
@@ -98,8 +98,8 @@ class AuthenticationControllerTest {
     @Test
     void whenLoginWithInvalidCredentials_thenReturnUnauthorized() throws Exception {
         // Arrange
-        LoginRequest loginRequest = new LoginRequest("testuser", "wrongpassword");
-        when(authenticationService.login(any(LoginRequest.class)))
+        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "wrongpassword");
+        when(authenticationService.authenticate(any(AuthenticationRequest.class)))
                 .thenThrow(new RuntimeException("Invalid credentials"));
 
         // Act & Assert
