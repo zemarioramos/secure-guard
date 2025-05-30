@@ -6,21 +6,21 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "logs_atividade_usuario")
+@Table(name = "user_activity_logs")
 public class UserActivityLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "usuario")
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "acao")
+    @Column(name = "action")
     private String action;
 
-    @Column(name = "detalhes")
+    @Column(name = "details")
     private String details;
 
-    @Column(name = "data_hora")
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 } 

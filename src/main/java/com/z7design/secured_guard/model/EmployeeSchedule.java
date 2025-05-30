@@ -24,7 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "employee_schedules")
+@Table(name = "schedule_employees")
 public class EmployeeSchedule {
     
     @Id
@@ -42,6 +42,9 @@ public class EmployeeSchedule {
     @ManyToOne
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
+    
+    @Column(name = "visual_order", nullable = false)
+    private Integer visualOrder;
     
     @Column(length = 500)
     private String observations;

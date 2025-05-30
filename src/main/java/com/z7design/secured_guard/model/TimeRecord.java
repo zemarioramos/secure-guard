@@ -21,41 +21,48 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "registros_ponto")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "time_records")
 public class TimeRecord {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     
     @ManyToOne
-    @JoinColumn(name = "funcionario_id", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false)
+    @JsonBackReference("employee-time-records")
     private Employee employee;
     
-    @Column(name = "data_registro", nullable = false)
+    @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
     
-    @Column(name = "hora_entrada")
+    @Column(name = "entry_time")
     private LocalTime entryTime;
     
-    @Column(name = "hora_saida")
+    @Column(name = "exit_time")
     private LocalTime exitTime;
     
-    @Column(name = "hora_entrada_almoco")
+    @Column(name = "entry_lunch_time")
     private LocalTime entryLunchTime;
     
-    @Column(name = "hora_saida_almoco")
+    @Column(name = "exit_lunch_time")
     private LocalTime exitLunchTime;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private TimeRecordStatus status;
     
-    @Column(name = "justificativa")
+    @Column(name = "justification")
     private String justification;
     
     @CreationTimestamp

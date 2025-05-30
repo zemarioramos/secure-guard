@@ -51,7 +51,7 @@ public class PayrollService {
         return payrollRepository.findByUnitId(unitId);
     }
     
-    public List<Payroll> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+    public List<Payroll> findByDateBetween(String startDate, String endDate) {
         return payrollRepository.findByDateBetween(startDate, endDate);
     }
     

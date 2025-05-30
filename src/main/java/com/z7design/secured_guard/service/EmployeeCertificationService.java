@@ -2,6 +2,7 @@ package com.z7design.secured_guard.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class EmployeeCertificationService {
     }
     
     @Transactional
-    public EmployeeCertification update(Long id, EmployeeCertification certification) {
+    public EmployeeCertification update(UUID id, EmployeeCertification certification) {
         EmployeeCertification existingCertification = findById(id);
         validateCertification(certification);
         
@@ -40,7 +41,7 @@ public class EmployeeCertificationService {
     }
     
     @Transactional
-    public EmployeeCertification renew(Long id, LocalDate newExpirationDate) {
+    public EmployeeCertification renew(UUID id, LocalDate newExpirationDate) {
         EmployeeCertification certification = findById(id);
         certification.setExpirationDate(newExpirationDate);
         certification.setStatus(CertificationStatus.RENEWED);
@@ -48,26 +49,26 @@ public class EmployeeCertificationService {
     }
     
     @Transactional
-    public EmployeeCertification cancel(Long id) {
+    public EmployeeCertification cancel(UUID id) {
         EmployeeCertification certification = findById(id);
         certification.setStatus(CertificationStatus.CANCELLED);
         return certificationRepository.save(certification);
     }
     
-    public EmployeeCertification findById(Long id) {
+    public EmployeeCertification findById(UUID id) {
         return certificationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Certificação não encontrada"));
     }
     
-    public List<EmployeeCertification> findByEmployeeId(Long employeeId) {
+    public List<EmployeeCertification> findByEmployeeId(UUID employeeId) {
         return certificationRepository.findByEmployeeId(employeeId);
     }
     
-    public List<EmployeeCertification> findByEmployeeIdAndStatus(Long employeeId, CertificationStatus status) {
+    public List<EmployeeCertification> findByEmployeeIdAndStatus(UUID employeeId, CertificationStatus status) {
         return certificationRepository.findByEmployeeIdAndStatus(employeeId, status);
     }
     
-    public List<EmployeeCertification> findByTrainingId(Long trainingId) {
+    public List<EmployeeCertification> findByTrainingId(UUID trainingId) {
         return certificationRepository.findByTrainingId(trainingId);
     }
     

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -54,14 +55,14 @@ class LogAnalyticsServiceTest {
         activityLog2.setTimestamp(LocalDateTime.now());
 
         errorLog1 = new ErrorLog();
-        errorLog1.setId(1L);
+        errorLog1.setId(UUID.randomUUID());
         errorLog1.setMessage("Error 1");
         errorLog1.setEndpoint("/api/test1");
         errorLog1.setStackTrace("Stack trace 1");
         errorLog1.setTimestamp(LocalDateTime.now());
 
         errorLog2 = new ErrorLog();
-        errorLog2.setId(2L);
+        errorLog2.setId(UUID.randomUUID());
         errorLog2.setMessage("Error 2");
         errorLog2.setEndpoint("/api/test2");
         errorLog2.setStackTrace("Stack trace 2");
@@ -164,7 +165,7 @@ class LogAnalyticsServiceTest {
         when(errorLogRepository.findAll()).thenReturn(Arrays.asList(errorLog1, errorLog2));
 
         List<ErrorLog> result = logAnalyticsService.getErrorsWithAdvancedFilters(
-            "/api/test1", null, null, null, null, null);
+            "/api/test1", null, null, null);
 
         assertEquals(1, result.size());
         assertEquals("/api/test1", result.get(0).getEndpoint());

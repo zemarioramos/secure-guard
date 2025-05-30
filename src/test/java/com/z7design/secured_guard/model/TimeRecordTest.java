@@ -21,15 +21,16 @@ class TimeRecordTest {
         employee.setId(UUID.randomUUID());
         employee.setName("Test Employee");
 
-        timeRecord = new TimeRecord();
-        timeRecord.setId(1L);
-        timeRecord.setEmployee(employee);
-        timeRecord.setRecordDate(LocalDate.now());
-        timeRecord.setEntryTime(LocalTime.of(9, 0));
-        timeRecord.setExitTime(LocalTime.of(18, 0));
-        timeRecord.setEntryLunchTime(LocalTime.of(12, 0));
-        timeRecord.setExitLunchTime(LocalTime.of(13, 0));
-        timeRecord.setStatus(TimeRecordStatus.PENDENTE);
+        timeRecord = TimeRecord.builder()
+            .id(UUID.randomUUID())
+            .employee(employee)
+            .recordDate(LocalDate.now())
+            .entryTime(LocalTime.of(9, 0))
+            .exitTime(LocalTime.of(18, 0))
+            .entryLunchTime(LocalTime.of(12, 0))
+            .exitLunchTime(LocalTime.of(13, 0))
+            .status(TimeRecordStatus.PENDING)
+            .build();
     }
 
     @Test
@@ -41,13 +42,13 @@ class TimeRecordTest {
         assertEquals(LocalTime.of(18, 0), timeRecord.getExitTime());
         assertEquals(LocalTime.of(12, 0), timeRecord.getEntryLunchTime());
         assertEquals(LocalTime.of(13, 0), timeRecord.getExitLunchTime());
-        assertEquals(TimeRecordStatus.PENDENTE, timeRecord.getStatus());
+        assertEquals(TimeRecordStatus.PENDING, timeRecord.getStatus());
     }
 
     @Test
     void whenUpdateStatus_thenStatusIsUpdated() {
-        timeRecord.setStatus(TimeRecordStatus.APROVADO);
-        assertEquals(TimeRecordStatus.APROVADO, timeRecord.getStatus());
+        timeRecord.setStatus(TimeRecordStatus.APPROVED);
+        assertEquals(TimeRecordStatus.APPROVED, timeRecord.getStatus());
     }
 
     @Test

@@ -132,10 +132,8 @@ public class LogAnalyticsController {
             @RequestParam(required = false) String endpoint,
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
-            @RequestParam(required = false) String message,
-            @RequestParam(required = false) Long minId,
-            @RequestParam(required = false) Long maxId) {
+            @RequestParam(required = false) String message) {
         return ResponseEntity.ok(logAnalyticsService.getErrorsWithAdvancedFilters(
-            endpoint, startDate, endDate, message, minId, maxId));
+            endpoint, startDate, endDate, message));
     }
 } 

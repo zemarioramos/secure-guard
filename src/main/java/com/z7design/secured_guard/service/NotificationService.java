@@ -2,6 +2,7 @@ package com.z7design.secured_guard.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,15 +58,15 @@ public class NotificationService {
             .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
     }
     
-    public List<Notification> findByUserId(Long userId) {
+    public List<Notification> findByUserId(UUID userId) {
         return notificationRepository.findByUserId(userId);
     }
     
-    public List<Notification> findByUserIdAndStatus(Long userId, NotificationStatus status) {
+    public List<Notification> findByUserIdAndStatus(UUID userId, NotificationStatus status) {
         return notificationRepository.findByUserIdAndStatus(userId, status);
     }
     
-    public List<Notification> findByUserIdAndType(Long userId, NotificationType type) {
+    public List<Notification> findByUserIdAndType(UUID userId, NotificationType type) {
         return notificationRepository.findByUserIdAndType(userId, type);
     }
     

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/logs/test")
@@ -156,7 +157,7 @@ public class LogTestController {
     }
 
     @GetMapping("/errors/{id}")
-    public ResponseEntity<ErrorLog> getErrorById(@PathVariable Long id) {
+    public ResponseEntity<ErrorLog> getErrorById(@PathVariable UUID id) {
         return errorLogRepository.findById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());

@@ -2,15 +2,15 @@
 	"info": {
 		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 		"name": "SecuredGuard API",
-		"description": "Coleção de endpoints para teste da API de Escalas",
+		"description": "Collection of endpoints for testing the Schedule API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Escalas",
+			"name": "Schedules",
 			"item": [
 				{
-					"name": "Criar Escala",
+					"name": "Create Schedule",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -21,18 +21,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"data\": \"2024-03-20\",\n    \"turno\": \"MANHA\",\n    \"unidadeId\": \"{{unidadeId}}\",\n    \"localId\": \"{{localId}}\",\n    \"status\": \"EM_SERVICO\",\n    \"rotaId\": \"{{rotaId}}\",\n    \"rondaId\": \"{{rondaId}}\"\n}"
+							"raw": "{\n    \"scheduleDate\": \"2024-03-20\",\n    \"shift\": \"MORNING\",\n    \"locationId\": \"{{locationId}}\",\n    \"status\": \"PENDING\",\n    \"routeId\": \"{{routeId}}\",\n    \"patrolId\": \"{{patrolId}}\"\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas",
+							"raw": "{{baseUrl}}/api/schedules",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas"]
+							"path": ["api", "schedules"]
 						},
-						"description": "Cria uma nova escala"
+						"description": "Creates a new schedule"
 					}
 				},
 				{
-					"name": "Adicionar Funcionário à Escala",
+					"name": "Add Employee to Schedule",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -43,18 +43,18 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"funcionarioId\": \"{{funcionarioId}}\",\n    \"cargoId\": \"{{cargoId}}\",\n    \"observacao\": \"Observação do funcionário\"\n}"
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"positionId\": \"{{positionId}}\",\n    \"observations\": \"Employee observations\"\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios",
+							"raw": "{{baseUrl}}/api/schedules/{{scheduleId}}/employees",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas", "{{escalaId}}", "funcionarios"]
+							"path": ["api", "schedules", "{{scheduleId}}", "employees"]
 						},
-						"description": "Adiciona um funcionário a uma escala existente"
+						"description": "Adds an employee to an existing schedule"
 					}
 				},
 				{
-					"name": "Atualizar Ordem dos Funcionários",
+					"name": "Update Employee Order",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -65,70 +65,70 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n    \"{{funcionario2Id}}\",\n    \"{{funcionario1Id}}\"\n]"
+							"raw": "[\n    \"{{employee2Id}}\",\n    \"{{employee1Id}}\"\n]"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios/ordem",
+							"raw": "{{baseUrl}}/api/schedules/{{scheduleId}}/employees/order",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas", "{{escalaId}}", "funcionarios", "ordem"]
+							"path": ["api", "schedules", "{{scheduleId}}", "employees", "order"]
 						},
-						"description": "Atualiza a ordem visual dos funcionários na escala"
+						"description": "Updates the visual order of employees in the schedule"
 					}
 				},
 				{
-					"name": "Buscar Escalas por Período",
+					"name": "Get Schedules by Period",
 					"request": {
 						"method": "GET",
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas/periodo?dataInicio=2024-03-01&dataFim=2024-03-31",
+							"raw": "{{baseUrl}}/api/schedules/period?startDate=2024-03-01&endDate=2024-03-31",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas", "periodo"],
+							"path": ["api", "schedules", "period"],
 							"query": [
 								{
-									"key": "dataInicio",
+									"key": "startDate",
 									"value": "2024-03-01"
 								},
 								{
-									"key": "dataFim",
+									"key": "endDate",
 									"value": "2024-03-31"
 								}
 							]
 						},
-						"description": "Busca escalas dentro de um período específico"
+						"description": "Gets schedules within a specific period"
 					}
 				},
 				{
-					"name": "Buscar Escalas por Unidade e Período",
+					"name": "Get Schedules by Unit and Period",
 					"request": {
 						"method": "GET",
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas/unidade/{{unidadeId}}/periodo?dataInicio=2024-03-01&dataFim=2024-03-31",
+							"raw": "{{baseUrl}}/api/schedules/unit/{{unitId}}/period?startDate=2024-03-01&endDate=2024-03-31",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas", "unidade", "{{unidadeId}}", "periodo"],
+							"path": ["api", "schedules", "unit", "{{unitId}}", "period"],
 							"query": [
 								{
-									"key": "dataInicio",
+									"key": "startDate",
 									"value": "2024-03-01"
 								},
 								{
-									"key": "dataFim",
+									"key": "endDate",
 									"value": "2024-03-31"
 								}
 							]
 						},
-						"description": "Busca escalas de uma unidade específica dentro de um período"
+						"description": "Gets schedules for a specific unit within a period"
 					}
 				},
 				{
-					"name": "Buscar Funcionários da Escala",
+					"name": "Get Schedule Employees",
 					"request": {
 						"method": "GET",
 						"url": {
-							"raw": "{{baseUrl}}/api/escalas/{{escalaId}}/funcionarios",
+							"raw": "{{baseUrl}}/api/schedules/{{scheduleId}}/employees",
 							"host": ["{{baseUrl}}"],
-							"path": ["api", "escalas", "{{escalaId}}", "funcionarios"]
+							"path": ["api", "schedules", "{{scheduleId}}", "employees"]
 						},
-						"description": "Busca todos os funcionários de uma escala específica"
+						"description": "Gets all employees for a specific schedule"
 					}
 				}
 			]
@@ -140,40 +140,40 @@
 			"value": "http://localhost:8080"
 		},
 		{
-			"key": "unidadeId",
-			"value": "seu-uuid-da-unidade"
+			"key": "unitId",
+			"value": "your-unit-uuid"
 		},
 		{
-			"key": "localId",
-			"value": "seu-uuid-do-local"
+			"key": "locationId",
+			"value": "your-location-uuid"
 		},
 		{
-			"key": "funcionarioId",
-			"value": "seu-uuid-do-funcionario"
+			"key": "employeeId",
+			"value": "your-employee-uuid"
 		},
 		{
-			"key": "funcionario1Id",
-			"value": "seu-uuid-do-funcionario-1"
+			"key": "employee1Id",
+			"value": "your-employee-1-uuid"
 		},
 		{
-			"key": "funcionario2Id",
-			"value": "seu-uuid-do-funcionario-2"
+			"key": "employee2Id",
+			"value": "your-employee-2-uuid"
 		},
 		{
-			"key": "cargoId",
-			"value": "seu-uuid-do-cargo"
+			"key": "positionId",
+			"value": "your-position-uuid"
 		},
 		{
-			"key": "escalaId",
-			"value": "seu-uuid-da-escala"
+			"key": "scheduleId",
+			"value": "your-schedule-uuid"
 		},
 		{
-			"key": "rotaId",
-			"value": "seu-uuid-da-rota"
+			"key": "routeId",
+			"value": "your-route-uuid"
 		},
 		{
-			"key": "rondaId",
-			"value": "seu-uuid-da-ronda"
+			"key": "patrolId",
+			"value": "your-patrol-uuid"
 		}
 	]
 } 

@@ -32,7 +32,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "overtimes")
+@Table(name = "overtime")
 public class Overtime {
     
     @Id

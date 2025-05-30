@@ -93,8 +93,8 @@ public class OvertimeService {
         return overtimeRepository.findByEmployeeIdAndType(employeeId, type);
     }
     
-    public List<Overtime> findByEmployeeIdAndDateBetween(UUID employeeId, LocalDate startDate, LocalDate endDate) {
-        return overtimeRepository.findByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
+    public List<Overtime> findByEmployeeIdAndOvertimeDateBetween(UUID employeeId, LocalDate startDate, LocalDate endDate) {
+        return overtimeRepository.findByEmployeeIdAndOvertimeDateBetween(employeeId, startDate, endDate);
     }
     
     private void validateOvertime(Overtime overtime) {

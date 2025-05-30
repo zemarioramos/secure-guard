@@ -2,6 +2,7 @@ package com.z7design.secured_guard.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -56,20 +57,20 @@ public class NotificationController {
     }
     
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Notification>> findByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<Notification>> findByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(notificationService.findByUserId(userId));
     }
     
     @GetMapping("/user/{userId}/status/{status}")
     public ResponseEntity<List<Notification>> findByUserIdAndStatus(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable NotificationStatus status) {
         return ResponseEntity.ok(notificationService.findByUserIdAndStatus(userId, status));
     }
     
     @GetMapping("/user/{userId}/type/{type}")
     public ResponseEntity<List<Notification>> findByUserIdAndType(
-            @PathVariable Long userId,
+            @PathVariable UUID userId,
             @PathVariable NotificationType type) {
         return ResponseEntity.ok(notificationService.findByUserIdAndType(userId, type));
     }

@@ -26,12 +26,12 @@ public interface PayrollRepository extends JpaRepository<Payroll, UUID> {
     
     List<Payroll> findByReferenceMonthStartingWith(String year);
     
-    @Query("SELECT p FROM Payroll p WHERE p.date BETWEEN :startDate AND :endDate")
-    List<Payroll> findByDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT p FROM Payroll p WHERE p.referenceMonth BETWEEN :startDate AND :endDate")
+    List<Payroll> findByDateBetween(@Param("startDate") String startDate, @Param("endDate") String endDate);
     
-    @Query("SELECT p FROM Payroll p WHERE EXTRACT(MONTH FROM p.date) = :month")
+    @Query("SELECT p FROM Payroll p WHERE p.referenceMonth LIKE '%' || :month")
     List<Payroll> findByMonth(@Param("month") String month);
     
-    @Query("SELECT p FROM Payroll p WHERE EXTRACT(YEAR FROM p.date) = :year")
+    @Query("SELECT p FROM Payroll p WHERE p.referenceMonth LIKE :year || '%'")
     List<Payroll> findByYear(@Param("year") Integer year);
 } 

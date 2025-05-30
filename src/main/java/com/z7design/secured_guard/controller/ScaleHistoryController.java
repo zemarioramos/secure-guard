@@ -1,8 +1,10 @@
 package com.z7design.secured_guard.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,9 +51,19 @@ public class ScaleHistoryController {
         return ResponseEntity.ok(scaleHistoryService.findByScale(scale));
     }
     
-    @GetMapping("/current")
-    public ResponseEntity<List<ScaleHistory>> findCurrentScales() {
-        return ResponseEntity.ok(scaleHistoryService.findCurrentScales());
+    @GetMapping("/date-range")
+    public ResponseEntity<List<ScaleHistory>> findByDateRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return ResponseEntity.ok(scaleHistoryService.findByDateRange(startDate, endDate));
+    }
+    
+    @GetMapping("/employee/{employeeId}/date-range")
+    public ResponseEntity<List<ScaleHistory>> findByEmployeeIdAndDateRange(
+            @PathVariable UUID employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return ResponseEntity.ok(scaleHistoryService.findByEmployeeIdAndDateRange(employeeId, startDate, endDate));
     }
     
     @GetMapping

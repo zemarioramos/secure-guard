@@ -25,7 +25,7 @@ public class TimeRecordService {
     @Transactional
     public TimeRecord create(TimeRecord timeRecord) {
         validateTimeRecord(timeRecord);
-        timeRecord.setStatus(TimeRecordStatus.PENDENTE);
+        timeRecord.setStatus(TimeRecordStatus.PENDING);
         return timeRecordRepository.save(timeRecord);
     }
     
@@ -45,14 +45,14 @@ public class TimeRecordService {
     @Transactional
     public TimeRecord approve(UUID id) {
         TimeRecord timeRecord = findById(id);
-        timeRecord.setStatus(TimeRecordStatus.APROVADO);
+        timeRecord.setStatus(TimeRecordStatus.APPROVED);
         return timeRecordRepository.save(timeRecord);
     }
     
     @Transactional
     public TimeRecord reject(UUID id, String justification) {
         TimeRecord timeRecord = findById(id);
-        timeRecord.setStatus(TimeRecordStatus.REJEITADO);
+        timeRecord.setStatus(TimeRecordStatus.REJECTED);
         timeRecord.setJustification(justification);
         return timeRecordRepository.save(timeRecord);
     }
@@ -66,7 +66,7 @@ public class TimeRecordService {
         timeRecord.setExitTime(exitTime);
         timeRecord.setEntryLunchTime(entryLunchTime);
         timeRecord.setExitLunchTime(exitLunchTime);
-        timeRecord.setStatus(TimeRecordStatus.AJUSTADO);
+        timeRecord.setStatus(TimeRecordStatus.ADJUSTED);
         timeRecord.setJustification(justification);
         
         return timeRecordRepository.save(timeRecord);

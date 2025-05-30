@@ -52,31 +52,29 @@ CREATE TABLE shifts (
 -- Criação da tabela de escalas
 CREATE TABLE schedules (
     id UUID PRIMARY KEY,
-    employee_id UUID NOT NULL,
     schedule_date DATE NOT NULL,
     shift VARCHAR(20) NOT NULL,
     location_id UUID NOT NULL,
     status VARCHAR(20) NOT NULL,
     route_id UUID,
     patrol_id UUID,
-    observations TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (location_id) REFERENCES locations(id),
     FOREIGN KEY (route_id) REFERENCES routes(id),
     FOREIGN KEY (patrol_id) REFERENCES patrols(id)
 );
 
 -- Criação da tabela de escalas de funcionários
-CREATE TABLE employee_schedules (
+CREATE TABLE schedule_employees (
     id UUID PRIMARY KEY,
     schedule_id UUID NOT NULL,
     employee_id UUID NOT NULL,
     position_id UUID NOT NULL,
+    visual_order INTEGER NOT NULL,
     observations TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (schedule_id) REFERENCES schedules(id),
     FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (position_id) REFERENCES positions(id)
@@ -108,7 +106,7 @@ CREATE TRIGGER update_schedules_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_employee_schedules_updated_at
-    BEFORE UPDATE ON employee_schedules
+CREATE TRIGGER update_schedule_employees_updated_at
+    BEFORE UPDATE ON schedule_employees
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column(); 

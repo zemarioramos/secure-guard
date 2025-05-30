@@ -16,5 +16,5 @@ public interface OvertimeRepository extends JpaRepository<Overtime, UUID> {
     List<Overtime> findByEmployeeId(UUID employeeId);
     List<Overtime> findByEmployeeIdAndStatus(UUID employeeId, OvertimeStatus status);
     List<Overtime> findByEmployeeIdAndType(UUID employeeId, OvertimeType type);
-    List<Overtime> findByEmployeeIdAndDateBetween(UUID employeeId, LocalDate startDate, LocalDate endDate);
+    List<Overtime> findByEmployeeIdAndOvertimeDateBetween(UUID employeeId, LocalDate startDate, LocalDate endDate);
 } 

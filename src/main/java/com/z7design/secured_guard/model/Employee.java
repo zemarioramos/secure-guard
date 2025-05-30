@@ -139,4 +139,9 @@ public class Employee {
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<EPI> epis = new ArrayList<>();
+
+    // Time Records
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @JsonManagedReference("employee-time-records")
+    private List<TimeRecord> timeRecords = new ArrayList<>();
 } 

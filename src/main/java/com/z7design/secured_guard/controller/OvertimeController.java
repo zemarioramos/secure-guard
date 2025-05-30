@@ -75,6 +75,6 @@ public class OvertimeController {
             @PathVariable UUID employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return ResponseEntity.ok(overtimeService.findByEmployeeIdAndDateBetween(employeeId, startDate, endDate));
+        return ResponseEntity.ok(overtimeService.findByEmployeeIdAndOvertimeDateBetween(employeeId, startDate, endDate));
     }
 } 

@@ -146,8 +146,8 @@ public class LogAnalyticsService {
         csv.append("ID,Message,Endpoint,StackTrace,Timestamp\n");
         
         // Dados
-        logs.forEach(log -> csv.append(String.format("%d,%s,%s,%s,%s\n",
-            log.getId(),
+        logs.forEach(log -> csv.append(String.format("%s,%s,%s,%s,%s\n",
+            log.getId().toString(),
             log.getMessage().replace(",", ";"),
             log.getEndpoint(),
             log.getStackTrace().replace(",", ";"),
@@ -224,8 +224,8 @@ public class LogAnalyticsService {
         for (int i = 0; i < logs.size(); i++) {
             ErrorLog log = logs.get(i);
             json.append(String.format(
-                "{\"id\":%d,\"message\":\"%s\",\"endpoint\":\"%s\",\"stackTrace\":\"%s\",\"timestamp\":\"%s\"}",
-                log.getId(), log.getMessage(), log.getEndpoint(),
+                "{\"id\":\"%s\",\"message\":\"%s\",\"endpoint\":\"%s\",\"stackTrace\":\"%s\",\"timestamp\":\"%s\"}",
+                log.getId().toString(), log.getMessage(), log.getEndpoint(),
                 log.getStackTrace(), log.getTimestamp()));
             
             if (i < logs.size() - 1) {
@@ -255,7 +255,7 @@ public class LogAnalyticsService {
                 ErrorLog log = logs.get(i);
                 Row row = sheet.createRow(i + 1);
                 
-                row.createCell(0).setCellValue(log.getId());
+                row.createCell(0).setCellValue(log.getId().toString());
                 row.createCell(1).setCellValue(log.getMessage());
                 row.createCell(2).setCellValue(log.getEndpoint());
                 row.createCell(3).setCellValue(log.getStackTrace());
@@ -292,14 +292,12 @@ public class LogAnalyticsService {
 
     public List<ErrorLog> getErrorsWithAdvancedFilters(
             String endpoint, LocalDateTime startDate, LocalDateTime endDate,
-            String message, Long minId, Long maxId) {
+            String message) {
         return errorLogRepository.findAll().stream()
             .filter(log -> endpoint == null || log.getEndpoint().equals(endpoint))
             .filter(log -> startDate == null || !log.getTimestamp().isBefore(startDate))
             .filter(log -> endDate == null || !log.getTimestamp().isAfter(endDate))
             .filter(log -> message == null || log.getMessage().contains(message))
-            .filter(log -> minId == null || log.getId() >= minId)
-            .filter(log -> maxId == null || log.getId() <= maxId)
             .collect(Collectors.toList());
     }
 } 

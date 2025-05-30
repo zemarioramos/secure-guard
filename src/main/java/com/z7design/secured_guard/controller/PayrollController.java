@@ -1,6 +1,5 @@
 package com.z7design.secured_guard.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,8 +52,8 @@ public class PayrollController {
     
     @GetMapping("/date-range")
     public ResponseEntity<List<Payroll>> findByDateBetween(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
         return ResponseEntity.ok(payrollService.findByDateBetween(startDate, endDate));
     }
     

@@ -1,8 +1,7 @@
 package com.z7design.secured_guard.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -49,16 +48,12 @@ public class ScaleHistoryService {
         return scaleHistoryRepository.findByScale(scale);
     }
     
-    public List<ScaleHistory> findByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return scaleHistoryRepository.findByStartDateBetween(startDate, endDate);
+    public List<ScaleHistory> findByDateRange(LocalDate startDate, LocalDate endDate) {
+        return scaleHistoryRepository.findByDateBetween(startDate, endDate);
     }
     
-    public List<ScaleHistory> findByEmployeeIdAndDateRange(UUID employeeId, LocalDateTime startDate, LocalDateTime endDate) {
-        return scaleHistoryRepository.findByEmployeeIdAndStartDateBetween(employeeId, startDate, endDate);
-    }
-    
-    public List<ScaleHistory> findCurrentScales() {
-        return scaleHistoryRepository.findByEndDateIsNull();
+    public List<ScaleHistory> findByEmployeeIdAndDateRange(UUID employeeId, LocalDate startDate, LocalDate endDate) {
+        return scaleHistoryRepository.findByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
     }
     
     public List<ScaleHistory> findAll() {

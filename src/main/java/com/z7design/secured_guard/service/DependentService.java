@@ -1,6 +1,7 @@
 package com.z7design.secured_guard.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class DependentService {
     }
     
     @Transactional
-    public Dependent update(Long id, Dependent dependent) {
+    public Dependent update(UUID id, Dependent dependent) {
         Dependent existingDependent = findById(id);
         validateDependent(dependent);
         
@@ -38,17 +39,17 @@ public class DependentService {
     }
     
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         Dependent dependent = findById(id);
         dependentRepository.delete(dependent);
     }
     
-    public Dependent findById(Long id) {
+    public Dependent findById(UUID id) {
         return dependentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Dependente não encontrado"));
     }
     
-    public List<Dependent> findByEmployeeId(Long employeeId) {
+    public List<Dependent> findByEmployeeId(UUID employeeId) {
         return dependentRepository.findByEmployeeId(employeeId);
     }
     

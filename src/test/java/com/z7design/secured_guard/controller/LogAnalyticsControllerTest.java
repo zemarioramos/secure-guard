@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,7 +42,7 @@ class LogAnalyticsControllerTest {
         activityLog.setTimestamp(LocalDateTime.now());
 
         errorLog = new ErrorLog();
-        errorLog.setId(1L);
+        errorLog.setId(UUID.randomUUID());
         errorLog.setMessage("Test error");
         errorLog.setEndpoint("/api/test");
         errorLog.setStackTrace("Test stack trace");
@@ -153,11 +154,11 @@ class LogAnalyticsControllerTest {
     void getErrorsWithAdvancedFilters_ShouldReturnCorrectResponse() {
         List<ErrorLog> expectedLogs = Arrays.asList(errorLog);
         when(logAnalyticsService.getErrorsWithAdvancedFilters(
-            anyString(), any(), any(), anyString(), any(), any()))
+            anyString(), any(), any(), anyString()))
             .thenReturn(expectedLogs);
 
         ResponseEntity<List<ErrorLog>> response = logAnalyticsController.getErrorsWithAdvancedFilters(
-            "/api/test", null, null, null, null, null);
+            "/api/test", null, null, null);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertEquals(expectedLogs, response.getBody());

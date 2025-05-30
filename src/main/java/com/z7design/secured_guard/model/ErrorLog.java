@@ -18,8 +18,8 @@ import org.hibernate.annotations.CreationTimestamp;
 public class ErrorLog {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     
     @Column(nullable = false)
     private String message;
@@ -30,6 +30,7 @@ public class ErrorLog {
     @Column(columnDefinition = "TEXT")
     private String stackTrace;
     
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private LocalDateTime timestamp;
 } 
