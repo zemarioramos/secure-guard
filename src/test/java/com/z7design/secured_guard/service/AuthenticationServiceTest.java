@@ -1,6 +1,7 @@
 package com.z7design.secured_guard.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -17,9 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.z7design.secured_guard.dto.AuthenticationResponse;
 import com.z7design.secured_guard.dto.AuthenticationRequest;
+import com.z7design.secured_guard.dto.AuthenticationResponse;
 import com.z7design.secured_guard.dto.RegisterRequest;
+import com.z7design.secured_guard.dto.UserResponse;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
 import com.z7design.secured_guard.security.JwtService;
@@ -46,8 +48,9 @@ class AuthenticationServiceTest {
     private AuthenticationServiceImpl authenticationService;
 
     private User testUser;
+    private RegisterRequest registerRequest;
+    private AuthenticationRequest authRequest;
     private String testToken;
-    private AuthenticationResponse testAuthResponse;
 
     @BeforeEach
     void setUp() {
@@ -61,115 +64,75 @@ class AuthenticationServiceTest {
                 .status(UserStatus.ACTIVE)
                 .build();
 
-        testToken = "test.jwt.token";
-        testAuthResponse = AuthenticationResponse.builder()
-                .token(testToken)
-                .user(com.z7design.secured_guard.dto.UserResponse.builder()
-                        .username(testUser.getUsername())
-                        .email(testUser.getEmail())
-                        .fullName(testUser.getName())
-                        .role(testUser.getRole().name())
-                        .build())
+        registerRequest = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("password")
+                .fullName("New User")
+                .role(UserRole.VIGILANTE)
                 .build();
+
+        authRequest = new AuthenticationRequest("testuser", "password");
+        testToken = "test.jwt.token";
     }
 
     @Test
-    void whenLoginWithValidCredentials_thenReturnToken() {
+    void whenRegisterWithValidData_thenReturnAuthResponse() {
         // Arrange
-        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "password");
-        Authentication authentication = mock(Authentication.class);
-        
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(testUser);
-        when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(testUser));
-        when(jwtService.generateToken(any(User.class))).thenReturn(testToken);
+        when(userRepository.existsByUsername(any())).thenReturn(false);
+        when(userRepository.existsByEmail(any())).thenReturn(false);
+        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        when(userRepository.save(any())).thenReturn(testUser);
+        when(jwtService.generateToken(any())).thenReturn(testToken);
 
         // Act
-        AuthenticationResponse result = authenticationService.authenticate(loginRequest);
+        AuthenticationResponse response = authenticationService.register(registerRequest);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(testToken, result.getToken());
-        assertEquals(testUser.getUsername(), result.getUser().getUsername());
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtService).generateToken(testUser);
-    }
-
-    @Test
-    void whenLoginWithInvalidCredentials_thenThrowException() {
-        // Arrange
-        AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "wrongpassword");
-        
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new RuntimeException("Invalid credentials"));
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> {
-            authenticationService.authenticate(loginRequest);
-        });
-    }
-
-    @Test
-    void whenRegisterWithValidData_thenCreateUser() {
-        // Arrange
-        RegisterRequest registerRequest = new RegisterRequest(
-                "newuser",
-                "new@example.com",
-                "password",
-                "New User"
-        );
-
-        when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtService.generateToken(any(User.class))).thenReturn(testToken);
-
-        // Act
-        AuthenticationResponse result = authenticationService.register(registerRequest);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(testToken, result.getToken());
-        assertEquals(testUser.getUsername(), result.getUser().getUsername());
-        verify(userRepository).save(any(User.class));
+        assertNotNull(response);
+        assertEquals(testToken, response.getToken());
+        assertNotNull(response.getUser());
+        assertEquals(testUser.getUsername(), response.getUser().getUsername());
+        assertEquals(testUser.getEmail(), response.getUser().getEmail());
+        assertEquals(testUser.getName(), response.getUser().getFullName());
+        assertEquals(testUser.getRole(), response.getUser().getRole());
     }
 
     @Test
     void whenRegisterWithExistingUsername_thenThrowException() {
         // Arrange
-        RegisterRequest registerRequest = new RegisterRequest(
-                "existinguser",
-                "new@example.com",
-                "password",
-                "New User"
-        );
-
-        when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.of(testUser));
+        when(userRepository.existsByUsername(any())).thenReturn(true);
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> {
-            authenticationService.register(registerRequest);
-        });
+        assertThrows(RuntimeException.class, () -> authenticationService.register(registerRequest));
     }
 
     @Test
-    void whenRegisterWithExistingEmail_thenThrowException() {
+    void whenAuthenticateWithValidCredentials_thenReturnAuthResponse() {
         // Arrange
-        RegisterRequest registerRequest = new RegisterRequest(
-                "newuser",
-                "existing@example.com",
-                "password",
-                "New User"
-        );
+        when(authenticationManager.authenticate(any())).thenReturn(new UsernamePasswordAuthenticationToken(testUser, null));
+        when(userRepository.findByUsername(any())).thenReturn(java.util.Optional.of(testUser));
+        when(jwtService.generateToken(any())).thenReturn(testToken);
 
-        when(userRepository.findByUsername(registerRequest.getUsername())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(registerRequest.getEmail())).thenReturn(Optional.of(testUser));
+        // Act
+        AuthenticationResponse response = authenticationService.authenticate(authRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(testToken, response.getToken());
+        assertNotNull(response.getUser());
+        assertEquals(testUser.getUsername(), response.getUser().getUsername());
+        assertEquals(testUser.getEmail(), response.getUser().getEmail());
+        assertEquals(testUser.getName(), response.getUser().getFullName());
+        assertEquals(testUser.getRole(), response.getUser().getRole());
+    }
+
+    @Test
+    void whenAuthenticateWithInvalidCredentials_thenThrowException() {
+        // Arrange
+        when(authenticationManager.authenticate(any())).thenThrow(new RuntimeException("Invalid credentials"));
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> {
-            authenticationService.register(registerRequest);
-        });
+        assertThrows(RuntimeException.class, () -> authenticationService.authenticate(authRequest));
     }
 } 

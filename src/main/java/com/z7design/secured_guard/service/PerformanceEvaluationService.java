@@ -2,6 +2,7 @@ package com.z7design.secured_guard.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class PerformanceEvaluationService {
     }
     
     @Transactional
-    public PerformanceEvaluation update(Long id, PerformanceEvaluation evaluation) {
+    public PerformanceEvaluation update(UUID id, PerformanceEvaluation evaluation) {
         PerformanceEvaluation existingEvaluation = findById(id);
         validateEvaluation(evaluation);
         
@@ -39,47 +40,47 @@ public class PerformanceEvaluationService {
     }
     
     @Transactional
-    public PerformanceEvaluation startEvaluation(Long id) {
+    public PerformanceEvaluation startEvaluation(UUID id) {
         PerformanceEvaluation evaluation = findById(id);
         evaluation.setStatus(EvaluationStatus.IN_PROGRESS);
         return evaluationRepository.save(evaluation);
     }
     
     @Transactional
-    public PerformanceEvaluation completeEvaluation(Long id) {
+    public PerformanceEvaluation completeEvaluation(UUID id) {
         PerformanceEvaluation evaluation = findById(id);
         evaluation.setStatus(EvaluationStatus.COMPLETED);
         return evaluationRepository.save(evaluation);
     }
     
     @Transactional
-    public PerformanceEvaluation reviewEvaluation(Long id) {
+    public PerformanceEvaluation reviewEvaluation(UUID id) {
         PerformanceEvaluation evaluation = findById(id);
         evaluation.setStatus(EvaluationStatus.IN_PROGRESS);
         return evaluationRepository.save(evaluation);
     }
     
     @Transactional
-    public PerformanceEvaluation approveEvaluation(Long id) {
+    public PerformanceEvaluation approveEvaluation(UUID id) {
         PerformanceEvaluation evaluation = findById(id);
         evaluation.setStatus(EvaluationStatus.COMPLETED);
         return evaluationRepository.save(evaluation);
     }
     
-    public PerformanceEvaluation findById(Long id) {
+    public PerformanceEvaluation findById(UUID id) {
         return evaluationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Performance evaluation not found"));
     }
     
-    public List<PerformanceEvaluation> findByEmployeeId(Long employeeId) {
+    public List<PerformanceEvaluation> findByEmployeeId(UUID employeeId) {
         return evaluationRepository.findByEmployeeId(employeeId);
     }
     
-    public List<PerformanceEvaluation> findByEvaluatorId(Long evaluatorId) {
+    public List<PerformanceEvaluation> findByEvaluatorId(UUID evaluatorId) {
         return evaluationRepository.findByEvaluatorId(evaluatorId);
     }
     
-    public List<PerformanceEvaluation> findByEmployeeIdAndStatus(Long employeeId, EvaluationStatus status) {
+    public List<PerformanceEvaluation> findByEmployeeIdAndStatus(UUID employeeId, EvaluationStatus status) {
         return evaluationRepository.findByEmployeeIdAndStatus(employeeId, status);
     }
     

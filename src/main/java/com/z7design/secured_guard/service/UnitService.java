@@ -7,8 +7,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.z7design.secured_guard.exception.ResourceNotFoundException;
+import com.z7design.secured_guard.exception.BusinessException;
 import com.z7design.secured_guard.model.Unit;
 import com.z7design.secured_guard.repository.UnitRepository;
 
@@ -20,27 +22,30 @@ public class UnitService {
     
     @Transactional
     public Unit create(Unit unit) {
+        validateUnit(unit);
+        
         if (unitRepository.existsByName(unit.getName())) {
-            throw new RuntimeException("Unidade já cadastrada");
+            throw new BusinessException("Unidade já cadastrada");
         }
         if (unit.getEmail() != null && unitRepository.existsByEmail(unit.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new BusinessException("Email já cadastrado");
         }
         return unitRepository.save(unit);
     }
     
     @Transactional
     public Unit update(UUID id, Unit unit) {
+        validateUnit(unit);
         Unit existingUnit = findById(id);
         
         if (!existingUnit.getName().equals(unit.getName()) && 
             unitRepository.existsByName(unit.getName())) {
-            throw new RuntimeException("Unidade já cadastrada");
+            throw new BusinessException("Unidade já cadastrada");
         }
         
         if (unit.getEmail() != null && !unit.getEmail().equals(existingUnit.getEmail()) && 
             unitRepository.existsByEmail(unit.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new BusinessException("Email já cadastrado");
         }
         
         unit.setId(id);
@@ -51,7 +56,7 @@ public class UnitService {
     public void delete(UUID id) {
         Unit unit = findById(id);
         if (!unit.getEmployees().isEmpty()) {
-            throw new RuntimeException("Não é possível excluir uma unidade que possui funcionários");
+            throw new BusinessException("Não é possível excluir uma unidade que possui funcionários");
         }
         unitRepository.delete(unit);
     }
@@ -81,5 +86,14 @@ public class UnitService {
     
     public List<Unit> findAll() {
         return unitRepository.findAll();
+    }
+    
+    private void validateUnit(Unit unit) {
+        if (!StringUtils.hasText(unit.getName())) {
+            throw new BusinessException("O nome da unidade é obrigatório");
+        }
+        if (!StringUtils.hasText(unit.getAddress())) {
+            throw new BusinessException("O endereço da unidade é obrigatório");
+        }
     }
 } 

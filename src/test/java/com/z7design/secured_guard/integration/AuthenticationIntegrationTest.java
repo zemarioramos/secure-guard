@@ -93,7 +93,8 @@ class AuthenticationIntegrationTest {
                 "newuser",
                 "new@example.com",
                 "password",
-                "New User"
+                "New User",
+                UserRole.VIGILANTE
         );
 
         // Act & Assert
@@ -115,7 +116,8 @@ class AuthenticationIntegrationTest {
                 "testuser",
                 "new@example.com",
                 "password",
-                "New User"
+                "New User",
+                UserRole.VIGILANTE
         );
 
         // Act & Assert
@@ -132,7 +134,8 @@ class AuthenticationIntegrationTest {
                 "newuser",
                 "test@example.com",
                 "password",
-                "New User"
+                "New User",
+                UserRole.VIGILANTE
         );
 
         // Act & Assert

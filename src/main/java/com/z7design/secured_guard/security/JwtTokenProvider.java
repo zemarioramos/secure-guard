@@ -2,57 +2,76 @@ package com.z7design.secured_guard.security;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.z7design.secured_guard.config.JwtConfig;
 import com.z7design.secured_guard.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${app.jwt.expiration}")
-    private int jwtExpirationInMs;
+    private final JwtConfig jwtConfig;
 
     public String generateToken(User user) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        try {
+            Date now = new Date();
+            Date expiryDate = new Date(now.getTime() + jwtConfig.getExpiration());
 
-        return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("role", user.getRole())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS512)
-                .compact();
+            log.debug("Gerando token para usuário: {}, expira em: {}", user.getUsername(), expiryDate);
+
+            String token = Jwts.builder()
+                    .setSubject(user.getUsername())
+                    .claim("role", user.getRole())
+                    .setIssuedAt(now)
+                    .setExpiration(expiryDate)
+                    .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()), SignatureAlgorithm.HS512)
+                    .compact();
+
+            log.debug("Token gerado com sucesso: {}", token);
+            return token;
+        } catch (Exception e) {
+            log.error("Erro ao gerar token: {}", e.getMessage(), e);
+            throw new RuntimeException("Erro ao gerar token: " + e.getMessage());
+        }
     }
 
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        return claims.getSubject();
+            String username = claims.getSubject();
+            log.debug("Username extraído do token: {}", username);
+            return username;
+        } catch (Exception e) {
+            log.error("Erro ao extrair username do token: {}", e.getMessage(), e);
+            throw new RuntimeException("Erro ao extrair username do token: " + e.getMessage());
+        }
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
                     .build()
                     .parseClaimsJws(token);
+            log.debug("Token válido");
             return true;
         } catch (Exception e) {
+            log.error("Token inválido: {}", e.getMessage());
             return false;
         }
     }

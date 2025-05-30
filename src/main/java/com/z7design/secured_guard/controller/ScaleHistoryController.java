@@ -46,11 +46,6 @@ public class ScaleHistoryController {
         return ResponseEntity.ok(scaleHistoryService.findByEmployeeId(employeeId));
     }
     
-    @GetMapping("/scale/{scale}")
-    public ResponseEntity<List<ScaleHistory>> findByScale(@PathVariable String scale) {
-        return ResponseEntity.ok(scaleHistoryService.findByScale(scale));
-    }
-    
     @GetMapping("/date-range")
     public ResponseEntity<List<ScaleHistory>> findByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

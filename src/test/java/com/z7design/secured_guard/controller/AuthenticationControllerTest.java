@@ -19,6 +19,7 @@ import com.z7design.secured_guard.dto.AuthenticationResponse;
 import com.z7design.secured_guard.dto.AuthenticationRequest;
 import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.dto.UserResponse;
+import com.z7design.secured_guard.model.enums.UserRole;
 import com.z7design.secured_guard.service.AuthenticationService;
 
 @WebMvcTest(AuthenticationController.class)
@@ -43,7 +44,7 @@ class AuthenticationControllerTest {
                 .username("testuser")
                 .email("test@example.com")
                 .fullName("Test User")
-                .role("USER")
+                .role(UserRole.VIGILANTE)
                 .build();
 
         testToken = "test.jwt.token";
@@ -69,18 +70,19 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.user.username").value(testUserResponse.getUsername()))
                 .andExpect(jsonPath("$.user.email").value(testUserResponse.getEmail()))
                 .andExpect(jsonPath("$.user.fullName").value(testUserResponse.getFullName()))
-                .andExpect(jsonPath("$.user.role").value(testUserResponse.getRole()));
+                .andExpect(jsonPath("$.user.role").value(testUserResponse.getRole().name()));
     }
 
     @Test
     void whenRegisterWithValidData_thenReturnUser() throws Exception {
         // Arrange
-        RegisterRequest registerRequest = new RegisterRequest(
-                "newuser",
-                "new@example.com",
-                "password",
-                "New User"
-        );
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .username("newuser")
+                .email("new@example.com")
+                .password("password")
+                .fullName("New User")
+                .role(UserRole.VIGILANTE)
+                .build();
         when(authenticationService.register(any(RegisterRequest.class))).thenReturn(testAuthResponse);
 
         // Act & Assert
@@ -92,7 +94,7 @@ class AuthenticationControllerTest {
                 .andExpect(jsonPath("$.user.username").value(testUserResponse.getUsername()))
                 .andExpect(jsonPath("$.user.email").value(testUserResponse.getEmail()))
                 .andExpect(jsonPath("$.user.fullName").value(testUserResponse.getFullName()))
-                .andExpect(jsonPath("$.user.role").value(testUserResponse.getRole()));
+                .andExpect(jsonPath("$.user.role").value(testUserResponse.getRole().name()));
     }
 
     @Test
@@ -112,12 +114,13 @@ class AuthenticationControllerTest {
     @Test
     void whenRegisterWithExistingUsername_thenReturnBadRequest() throws Exception {
         // Arrange
-        RegisterRequest registerRequest = new RegisterRequest(
-                "existinguser",
-                "new@example.com",
-                "password",
-                "New User"
-        );
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .username("existinguser")
+                .email("new@example.com")
+                .password("password")
+                .fullName("New User")
+                .role(UserRole.VIGILANTE)
+                .build();
         when(authenticationService.register(any(RegisterRequest.class)))
                 .thenThrow(new RuntimeException("Username already exists"));
 

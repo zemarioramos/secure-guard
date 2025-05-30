@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.repository.UserRepository;
@@ -28,6 +29,9 @@ public class UserService {
     }
 
     public User create(User user) {
+        if (!StringUtils.hasText(user.getName())) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -35,6 +39,10 @@ public class UserService {
     public User update(UUID id, User user) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!StringUtils.hasText(user.getName())) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
 
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());

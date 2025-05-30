@@ -121,7 +121,8 @@ class AuthenticationLoadTest {
                             "newuser" + userIndex,
                             "new" + userIndex + "@example.com",
                             "password",
-                            "New User " + userIndex
+                            "New User " + userIndex,
+                            UserRole.VIGILANTE
                     );
 
                     MvcResult result = mockMvc.perform(post("/api/auth/register")

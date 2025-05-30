@@ -44,10 +44,6 @@ public class ScaleHistoryService {
         return scaleHistoryRepository.findByEmployeeId(employeeId);
     }
     
-    public List<ScaleHistory> findByScale(String scale) {
-        return scaleHistoryRepository.findByScale(scale);
-    }
-    
     public List<ScaleHistory> findByDateRange(LocalDate startDate, LocalDate endDate) {
         return scaleHistoryRepository.findByDateBetween(startDate, endDate);
     }
