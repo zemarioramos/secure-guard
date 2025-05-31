@@ -21,6 +21,8 @@ import com.z7design.secured_guard.dto.RegisterRequest;
 import com.z7design.secured_guard.dto.UserResponse;
 import com.z7design.secured_guard.model.enums.UserRole;
 import com.z7design.secured_guard.service.AuthenticationService;
+import com.z7design.secured_guard.service.LogService;
+import com.z7design.secured_guard.security.JwtService;
 
 @WebMvcTest(AuthenticationController.class)
 class AuthenticationControllerTest {
@@ -33,6 +35,12 @@ class AuthenticationControllerTest {
 
     @MockBean
     private AuthenticationService authenticationService;
+
+    @MockBean
+    private LogService logService;
+
+    @MockBean
+    private JwtService jwtService;
 
     private UserResponse testUserResponse;
     private AuthenticationResponse testAuthResponse;

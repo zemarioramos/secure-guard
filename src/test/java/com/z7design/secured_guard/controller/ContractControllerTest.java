@@ -73,10 +73,11 @@ class ContractControllerTest {
 
         contract = Contract.builder()
                 .id(contractId)
-                .serviceType(ContractType.VIGILANCIA_PATRIMONIAL.name())
+                .type(ContractType.VIGILANCIA_PATRIMONIAL)
                 .value(new BigDecimal("10000.00"))
-                .status(ContractStatus.ATIVO.name())
-                .validity(LocalDate.now().plusYears(1))
+                .status(ContractStatus.ATIVO)
+                .startDate(now)
+                .endDate(now.plusYears(1))
                 .client(client)
                 .unit(unit)
                 .infrastructureDemand("Test infrastructure demand")
@@ -165,15 +166,15 @@ class ContractControllerTest {
         List<Contract> contracts = Arrays.asList(contract);
         List<ContractDTO> contractDTOs = Arrays.asList(contractDTO);
 
-        when(contractService.findByStatus(anyString())).thenReturn(contracts);
+        when(contractService.findByStatus(any(ContractStatus.class))).thenReturn(contracts);
         when(contractMapper.toDTO(any(Contract.class))).thenReturn(contractDTO);
 
-        mockMvc.perform(get("/api/contracts/status/{status}", ContractStatus.ATIVO.name()))
+        mockMvc.perform(get("/api/contracts/status/{status}", ContractStatus.ATIVO))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(contractId.toString()))
                 .andExpect(jsonPath("$[0].type").value(ContractType.VIGILANCIA_PATRIMONIAL.name()));
 
-        verify(contractService).findByStatus(ContractStatus.ATIVO.name());
+        verify(contractService).findByStatus(ContractStatus.ATIVO);
         verify(contractMapper).toDTO(any(Contract.class));
     }
 
@@ -219,15 +220,15 @@ class ContractControllerTest {
         List<Contract> contracts = Arrays.asList(contract);
         List<ContractDTO> contractDTOs = Arrays.asList(contractDTO);
 
-        when(contractService.findByStatusAndUnit(anyString(), any(UUID.class))).thenReturn(contracts);
+        when(contractService.findByStatusAndUnit(any(ContractStatus.class), any(UUID.class))).thenReturn(contracts);
         when(contractMapper.toDTO(any(Contract.class))).thenReturn(contractDTO);
 
-        mockMvc.perform(get("/api/contracts/status/{status}/unit/{unitId}", ContractStatus.ATIVO.name(), unitId))
+        mockMvc.perform(get("/api/contracts/status/{status}/unit/{unitId}", ContractStatus.ATIVO, unitId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(contractId.toString()))
                 .andExpect(jsonPath("$[0].type").value(ContractType.VIGILANCIA_PATRIMONIAL.name()));
 
-        verify(contractService).findByStatusAndUnit(ContractStatus.ATIVO.name(), unitId);
+        verify(contractService).findByStatusAndUnit(ContractStatus.ATIVO, unitId);
         verify(contractMapper).toDTO(any(Contract.class));
     }
 

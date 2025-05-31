@@ -1,0 +1,1 @@
+ALTER TABLE employees ADD COLUMN current_scale VARCHAR(50); 

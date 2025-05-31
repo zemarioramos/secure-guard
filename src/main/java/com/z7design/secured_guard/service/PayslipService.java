@@ -15,6 +15,7 @@ public class PayslipService {
                 .totalPages(0)
                 .successfulPages(0)
                 .failedPages(0)
+                .results(new java.util.ArrayList<>())
                 .build();
     }
 

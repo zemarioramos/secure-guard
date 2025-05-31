@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@ActiveProfiles("test")
 class UnitRepositoryTest {
 
     @Autowired
@@ -27,24 +30,26 @@ class UnitRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        parentUnit = Unit.builder()
-                .id(UUID.randomUUID())
-                .name("Parent Unit")
-                .description("Parent Description")
-                .address("Parent Address")
-                .phone("123456789")
-                .email("parent@example.com")
-                .build();
+        parentUnit = new Unit();
+        parentUnit.setId(UUID.randomUUID());
+        parentUnit.setName("Parent Unit");
+        parentUnit.setDescription("Parent Description");
+        parentUnit.setAddress("Parent Address");
+        parentUnit.setPhone("123456789");
+        parentUnit.setEmail("parent@example.com");
+        parentUnit.setCreatedAt(LocalDateTime.now());
+        parentUnit.setUpdatedAt(LocalDateTime.now());
 
-        unit = Unit.builder()
-                .id(UUID.randomUUID())
-                .name("Test Unit")
-                .description("Test Description")
-                .address("Test Address")
-                .phone("987654321")
-                .email("test@example.com")
-                .parent(parentUnit)
-                .build();
+        unit = new Unit();
+        unit.setId(UUID.randomUUID());
+        unit.setName("Test Unit");
+        unit.setDescription("Test Description");
+        unit.setAddress("Test Address");
+        unit.setPhone("987654321");
+        unit.setEmail("test@example.com");
+        unit.setParent(parentUnit);
+        unit.setCreatedAt(LocalDateTime.now());
+        unit.setUpdatedAt(LocalDateTime.now());
 
         entityManager.persist(parentUnit);
         entityManager.persist(unit);

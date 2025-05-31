@@ -47,7 +47,9 @@ class PayslipServiceTest {
         document.addPage(page2);
         
         // Salvar o PDF em um array de bytes
-        byte[] pdfBytes = document.save(new java.io.ByteArrayOutputStream());
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        document.save(outputStream);
+        byte[] pdfBytes = outputStream.toByteArray();
         document.close();
         
         pdfFile = new MockMultipartFile(
@@ -82,7 +84,9 @@ class PayslipServiceTest {
     void whenProcessEmptyPdf_thenReturnEmptyResponse() throws IOException {
         // Criar um PDF vazio
         PDDocument emptyDoc = new PDDocument();
-        byte[] emptyPdfBytes = emptyDoc.save(new java.io.ByteArrayOutputStream());
+        java.io.ByteArrayOutputStream emptyOutputStream = new java.io.ByteArrayOutputStream();
+        emptyDoc.save(emptyOutputStream);
+        byte[] emptyPdfBytes = emptyOutputStream.toByteArray();
         emptyDoc.close();
         
         MockMultipartFile emptyPdfFile = new MockMultipartFile(

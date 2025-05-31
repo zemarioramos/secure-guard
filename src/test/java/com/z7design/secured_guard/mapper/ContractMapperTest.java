@@ -3,7 +3,6 @@ package com.z7design.secured_guard.mapper;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -41,23 +40,20 @@ class ContractMapperTest {
         client.setId(clientId);
         client.setCompanyName("Test Company");
 
-        unit = Unit.builder()
-                .id(unitId)
-                .name("Test Unit")
-                .build();
+        unit = new Unit();
+        unit.setId(unitId);
+        unit.setName("Test Unit");
 
-        contract = Contract.builder()
-                .id(contractId)
-                .serviceType(ContractType.VIGILANCIA_PATRIMONIAL.name())
-                .value(new BigDecimal("1000.00"))
-                .status(ContractStatus.ATIVO.name())
-                .validity(LocalDate.now().plusYears(1))
-                .client(client)
-                .unit(unit)
-                .infrastructureDemand("Test infrastructure demand")
-                .createdAt(now)
-                .updatedAt(now)
-                .build();
+        contract = new Contract();
+        contract.setId(contractId);
+        contract.setType(ContractType.VIGILANCIA_PATRIMONIAL);
+        contract.setValue(new BigDecimal("1000.00"));
+        contract.setStatus(ContractStatus.ATIVO);
+        contract.setClient(client);
+        contract.setUnit(unit);
+        contract.setInfrastructureDemand("Test infrastructure demand");
+        contract.setCreatedAt(now);
+        contract.setUpdatedAt(now);
 
         contractDTO = new ContractDTO();
         contractDTO.setId(contractId);
@@ -101,8 +97,8 @@ class ContractMapperTest {
 
         assertNotNull(result);
         assertEquals(contractId, result.getId());
-        assertEquals(ContractType.VIGILANCIA_PATRIMONIAL.name(), result.getServiceType());
-        assertEquals(ContractStatus.ATIVO.name(), result.getStatus());
+        assertEquals(ContractType.VIGILANCIA_PATRIMONIAL, result.getType());
+        assertEquals(ContractStatus.ATIVO, result.getStatus());
         assertEquals(new BigDecimal("1000.00"), result.getValue());
         assertEquals(now, result.getCreatedAt());
         assertEquals(now, result.getUpdatedAt());

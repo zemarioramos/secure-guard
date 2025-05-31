@@ -1,0 +1,1 @@
+ALTER TABLE employees ADD COLUMN document VARCHAR(100) UNIQUE; 

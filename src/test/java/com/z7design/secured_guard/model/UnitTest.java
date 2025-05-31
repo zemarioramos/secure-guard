@@ -208,20 +208,44 @@ class UnitTest {
     }
 
     @Test
-    void whenCreateUnit_thenAuditFieldsAreSet() {
-        unit.onCreate();
+    void whenCreateUnit_thenTimestampsAreSet() {
+        Unit unit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Test Unit")
+                .description("Test Description")
+                .address("Test Address")
+                .phone("123456789")
+                .email("test@example.com")
+                .build();
+
         assertNotNull(unit.getCreatedAt());
         assertNotNull(unit.getUpdatedAt());
         assertEquals(unit.getCreatedAt(), unit.getUpdatedAt());
     }
 
     @Test
-    void whenUpdateUnit_thenUpdatedAtIsChanged() {
-        LocalDateTime initialUpdatedAt = unit.getUpdatedAt();
-        unit.setName("Updated Unit Name");
-        unit.onUpdate();
+    void whenUpdateUnit_thenUpdatedAtIsUpdated() {
+        Unit unit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Test Unit")
+                .description("Test Description")
+                .address("Test Address")
+                .phone("123456789")
+                .email("test@example.com")
+                .build();
 
-        assertNotEquals(initialUpdatedAt, unit.getUpdatedAt());
+        LocalDateTime originalUpdatedAt = unit.getUpdatedAt();
+        
+        // Simulate a delay
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        unit.setName("Updated Unit");
+        
+        assertTrue(unit.getUpdatedAt().isAfter(originalUpdatedAt));
     }
 
     @Test
@@ -234,5 +258,59 @@ class UnitTest {
     void whenCreateUnitWithInvalidPhone_thenValidationFails() {
         unit.setPhone("invalid-phone");
         assertFalse(unit.getPhone().matches("^\\d{10,11}$"));
+    }
+
+    @Test
+    void whenCreateUnitWithParent_thenParentChildRelationshipIsEstablished() {
+        Unit parentUnit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Parent Unit")
+                .description("Parent Description")
+                .address("Parent Address")
+                .phone("123456789")
+                .email("parent@example.com")
+                .build();
+
+        Unit childUnit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Child Unit")
+                .description("Child Description")
+                .address("Child Address")
+                .phone("987654321")
+                .email("child@example.com")
+                .parent(parentUnit)
+                .build();
+
+        assertNotNull(childUnit.getParent());
+        assertEquals(parentUnit.getId(), childUnit.getParent().getId());
+        assertTrue(parentUnit.getChildren().isEmpty());
+    }
+
+    @Test
+    void whenAddChildToParent_thenChildIsAdded() {
+        Unit parentUnit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Parent Unit")
+                .description("Parent Description")
+                .address("Parent Address")
+                .phone("123456789")
+                .email("parent@example.com")
+                .build();
+
+        Unit childUnit = Unit.builder()
+                .id(UUID.randomUUID())
+                .name("Child Unit")
+                .description("Child Description")
+                .address("Child Address")
+                .phone("987654321")
+                .email("child@example.com")
+                .parent(parentUnit)
+                .build();
+
+        parentUnit.getChildren().add(childUnit);
+
+        assertFalse(parentUnit.getChildren().isEmpty());
+        assertEquals(1, parentUnit.getChildren().size());
+        assertEquals(childUnit.getId(), parentUnit.getChildren().get(0).getId());
     }
 } 

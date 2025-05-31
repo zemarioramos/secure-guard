@@ -126,12 +126,14 @@ class ProposalServiceTest {
 
     @Test
     void whenFindByContractId_thenReturnProposal() {
-        when(proposalRepository.findByContractId(contractId)).thenReturn(Optional.of(proposal));
+        List<Proposal> proposals = Arrays.asList(proposal);
+        when(proposalRepository.findByContractId(contractId)).thenReturn(proposals);
 
-        Proposal foundProposal = proposalService.findByContractId(contractId);
+        List<Proposal> foundProposals = proposalService.findByContractId(contractId);
 
-        assertNotNull(foundProposal);
-        assertEquals(contractId, foundProposal.getContract().getId());
+        assertNotNull(foundProposals);
+        assertFalse(foundProposals.isEmpty());
+        assertEquals(contractId, foundProposals.get(0).getContract().getId());
         verify(proposalRepository).findByContractId(contractId);
     }
 

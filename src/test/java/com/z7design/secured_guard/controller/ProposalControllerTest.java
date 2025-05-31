@@ -141,16 +141,19 @@ class ProposalControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN", "GESTOR", "SUPERVISOR"})
     void whenFindByContractId_thenReturnProposal() throws Exception {
-        when(proposalService.findByContractId(any(UUID.class))).thenReturn(proposal);
+        List<Proposal> proposals = Arrays.asList(proposal);
+        List<ProposalDTO> proposalDTOs = Arrays.asList(proposalDTO);
+
+        when(proposalService.findByContractId(any(UUID.class))).thenReturn(proposals);
         when(proposalMapper.toDTO(any(Proposal.class))).thenReturn(proposalDTO);
 
         mockMvc.perform(get("/api/proposals/contract/{contractId}", contractId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(proposalId.toString()))
-                .andExpect(jsonPath("$.contractId").value(contractId.toString()));
+                .andExpect(jsonPath("$[0].id").value(proposalId.toString()))
+                .andExpect(jsonPath("$[0].contractId").value(contractId.toString()));
 
         verify(proposalService).findByContractId(contractId);
-        verify(proposalMapper).toDTO(any(Proposal.class));
+        verify(proposalMapper, atLeastOnce()).toDTO(any(Proposal.class));
     }
 
     @Test

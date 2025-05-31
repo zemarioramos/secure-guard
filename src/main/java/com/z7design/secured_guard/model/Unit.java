@@ -44,49 +44,40 @@ public class Unit {
     @Column
     private String email;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @JsonBackReference
     private Unit parent;
     
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("parent")
     @Builder.Default
     private List<Unit> children = new ArrayList<>();
     
-    @OneToMany(mappedBy = "unit")
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("unit")
     @Builder.Default
     private List<Employee> employees = new ArrayList<>();
     
-    @OneToMany(mappedBy = "unit")
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("unit")
     @Builder.Default
     private List<Position> positions = new ArrayList<>();
     
-    @OneToMany(mappedBy = "unit")
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"position", "unit", "documents", "benefits", "scaleHistory", "occurrences", "payrolls", "epis"})
     @Builder.Default
     private List<Payroll> payrolls = new ArrayList<>();
     
-    @OneToMany(mappedBy = "unit")
+    @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Location> locations = new ArrayList<>();
     
-    @Column(name = "created_at")
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-    @Column(name = "updated_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 } 
