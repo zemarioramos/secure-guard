@@ -46,7 +46,7 @@ public class Benefit {
     @Column(name = "end_date")
     private LocalDate endDate;
     
-    @Column(nullable = false)
+    @Column(name = "benefit_value", nullable = false)
     private BigDecimal value;
     
     @Column(name = "created_at")

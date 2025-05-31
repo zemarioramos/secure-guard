@@ -13,9 +13,18 @@ import com.z7design.secured_guard.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+public interface UserService {
+    List<User> findActiveUsers();
+    User findById(UUID id);
+    User findByEmail(String email);
+    User save(User user);
+    void delete(UUID id);
+    List<User> findAll();
+}
+
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -69,5 +78,35 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> findActiveUsers() {
+        // Implementation needed
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
+    @Override
+    public User findById(UUID id) {
+        // Implementation needed
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        // Implementation needed
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
+    @Override
+    public User save(User user) {
+        // Implementation needed
+        throw new UnsupportedOperationException("Method not implemented");
+    }
+
+    @Override
+    public List<User> findAll() {
+        // Implementation needed
+        throw new UnsupportedOperationException("Method not implemented");
     }
 } 

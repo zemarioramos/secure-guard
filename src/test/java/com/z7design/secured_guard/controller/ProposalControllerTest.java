@@ -55,7 +55,6 @@ class ProposalControllerTest {
         
         proposal = new Proposal();
         proposal.setId(proposalId);
-        proposal.setContractId(contractId);
         proposal.setProposalNumber("PROP-001");
         proposal.setStatus(ProposalStatus.RASCUNHO);
         proposal.setDescription("Test Proposal");

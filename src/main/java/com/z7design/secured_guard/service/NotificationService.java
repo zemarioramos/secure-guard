@@ -17,6 +17,8 @@ import com.z7design.secured_guard.model.Contract;
 import com.z7design.secured_guard.model.JobVacancy;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Service
 @RequiredArgsConstructor
@@ -122,6 +124,41 @@ public class NotificationService {
                 .status(NotificationStatus.UNREAD)
                 .build();
         
+        notificationRepository.save(notification);
+    }
+
+    public List<Notification> getUnreadNotifications(UUID userId) {
+        return notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
+    }
+
+    public void markAllAsRead(UUID userId) {
+        List<Notification> notifications = notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
+        for (Notification notification : notifications) {
+            notification.setStatus(NotificationStatus.READ);
+            notification.setReadAt(LocalDateTime.now());
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    public Page<Notification> findByUserId(UUID userId, Pageable pageable) {
+        return notificationRepository.findByUserId(userId, pageable);
+    }
+
+    public List<Notification> findUnreadByUserId(UUID userId) {
+        return notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
+    }
+
+    public Long countUnreadByUserId(UUID userId) {
+        return notificationRepository.countByUserIdAndStatus(userId, NotificationStatus.UNREAD);
+    }
+
+    public void createSystemNotification(String title, String message, NotificationType type) {
+        Notification notification = Notification.builder()
+                .title(title)
+                .message(message)
+                .type(type)
+                .status(NotificationStatus.UNREAD)
+                .build();
         notificationRepository.save(notification);
     }
 } 

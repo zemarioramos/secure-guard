@@ -11,10 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.z7design.secured_guard.config.TestSecurityConfig;
 import com.z7design.secured_guard.dto.AuthenticationResponse;
 import com.z7design.secured_guard.dto.AuthenticationRequest;
 import com.z7design.secured_guard.dto.RegisterRequest;
@@ -25,6 +28,7 @@ import com.z7design.secured_guard.service.LogService;
 import com.z7design.secured_guard.security.JwtService;
 
 @WebMvcTest(AuthenticationController.class)
+@Import(TestSecurityConfig.class)
 class AuthenticationControllerTest {
 
     @Autowired
@@ -110,7 +114,7 @@ class AuthenticationControllerTest {
         // Arrange
         AuthenticationRequest loginRequest = new AuthenticationRequest("testuser", "wrongpassword");
         when(authenticationService.authenticate(any(AuthenticationRequest.class)))
-                .thenThrow(new RuntimeException("Invalid credentials"));
+                .thenThrow(new BadCredentialsException("Invalid credentials"));
 
         // Act & Assert
         mockMvc.perform(post("/api/auth/login")

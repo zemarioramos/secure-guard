@@ -70,4 +70,69 @@ public class TimeRecord {
     
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-} 
+    
+    // Manual getters and setters
+    public Employee getEmployee() {
+        return employee;
+    }
+    
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    
+    public LocalDate getRecordDate() {
+        return recordDate;
+    }
+    
+    public void setRecordDate(LocalDate recordDate) {
+        this.recordDate = recordDate;
+    }
+    
+    public LocalTime getEntryTime() {
+        return entryTime;
+    }
+    
+    public void setEntryTime(LocalTime entryTime) {
+        this.entryTime = entryTime;
+    }
+    
+    public LocalTime getExitTime() {
+        return exitTime;
+    }
+    
+    public void setExitTime(LocalTime exitTime) {
+        this.exitTime = exitTime;
+    }
+    
+    public LocalTime getEntryLunchTime() {
+        return entryLunchTime;
+    }
+    
+    public void setEntryLunchTime(LocalTime entryLunchTime) {
+        this.entryLunchTime = entryLunchTime;
+    }
+    
+    public LocalTime getExitLunchTime() {
+        return exitLunchTime;
+    }
+    
+    public void setExitLunchTime(LocalTime exitLunchTime) {
+        this.exitLunchTime = exitLunchTime;
+    }
+    
+    public TimeRecordStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(TimeRecordStatus status) {
+        this.status = status;
+    }
+    
+    public String getJustification() {
+        return justification;
+    }
+    
+    public void setJustification(String justification) {
+        this.justification = justification;
+    }
+}

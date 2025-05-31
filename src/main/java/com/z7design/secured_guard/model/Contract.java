@@ -3,7 +3,6 @@ package com.z7design.secured_guard.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -67,10 +66,6 @@ public class Contract {
     @JoinColumn(name = "unit_id", insertable = false, updatable = false)
     @JsonBackReference
     private Unit unit;
-    
-    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Document> documents;
     
     @OneToOne(mappedBy = "contract", cascade = CascadeType.ALL)
     @JsonManagedReference

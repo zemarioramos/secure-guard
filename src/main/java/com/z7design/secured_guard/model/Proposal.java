@@ -28,9 +28,6 @@ public class Proposal {
     @Column(name = "proposal_number", nullable = false, unique = true)
     private String proposalNumber;
     
-    @Column(name = "contract_id")
-    private UUID contractId;
-    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProposalStatus status;
@@ -65,4 +62,77 @@ public class Proposal {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-} 
+    
+    // Manual getters and setters
+    public UUID getId() {
+        return id;
+    }
+    
+    public void setId(UUID id) {
+        this.id = id;
+    }
+    
+    public String getProposalNumber() {
+        return proposalNumber;
+    }
+    
+    public void setProposalNumber(String proposalNumber) {
+        this.proposalNumber = proposalNumber;
+    }
+    
+    public ProposalStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(ProposalStatus status) {
+        this.status = status;
+    }
+    
+    public BigDecimal getValue() {
+        return value;
+    }
+    
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public LocalDateTime getValidity() {
+        return validity;
+    }
+    
+    public void setValidity(LocalDateTime validity) {
+        this.validity = validity;
+    }
+    
+    public Contract getContract() {
+        return contract;
+    }
+    
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}

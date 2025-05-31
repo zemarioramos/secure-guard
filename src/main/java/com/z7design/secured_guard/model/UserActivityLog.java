@@ -12,15 +12,20 @@ public class UserActivityLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(nullable = false)
     private String username;
 
-    @Column(name = "action")
+    @Column(nullable = false)
     private String action;
 
-    @Column(name = "details")
+    @Column
     private String details;
 
-    @Column(name = "timestamp")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime timestamp;
+
+    @PrePersist
+    protected void onCreate() {
+        timestamp = LocalDateTime.now();
+    }
 } 

@@ -47,15 +47,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     
     @Column(nullable = false)
     private String name;
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private String role;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -67,9 +66,11 @@ public class User implements UserDetails {
     private boolean active = true;
     
     @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
     @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
     
     @PrePersist
@@ -85,7 +86,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override
@@ -117,4 +118,45 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return status == UserStatus.ACTIVE;
     }
-} 
+
+    // Manual getters and setters
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public UserRole getRole() {
+        return UserRole.valueOf(role);
+    }
+    
+    public void setRole(UserRole role) {
+        this.role = role.name();
+    }
+    
+    public UserStatus getStatus() {
+        return status;
+    }
+    
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}

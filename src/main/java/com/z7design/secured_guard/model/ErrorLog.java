@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import jakarta.persistence.PrePersist;
 
 @Data
 @Entity
@@ -18,8 +19,8 @@ import org.hibernate.annotations.CreationTimestamp;
 public class ErrorLog {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
     @Column(nullable = false)
     private String message;
@@ -31,6 +32,10 @@ public class ErrorLog {
     private String stackTrace;
     
     @Column(name = "created_at", nullable = false)
-    @CreationTimestamp
     private LocalDateTime timestamp;
+    
+    @PrePersist
+    protected void onCreate() {
+        timestamp = LocalDateTime.now();
+    }
 } 

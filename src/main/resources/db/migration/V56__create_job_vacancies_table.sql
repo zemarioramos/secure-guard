@@ -1,17 +1,14 @@
--- V56__create_job_vacancies_table.sql
-CREATE TABLE job_vacancies (
-    id UUID PRIMARY KEY,
+-- Creating job vacancies table
+CREATE TABLE IF NOT EXISTS job_vacancies (
+    id BIGSERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    description TEXT NOT NULL,
-    requirements TEXT NOT NULL,
-    salary_range VARCHAR(50) NOT NULL,
-    location VARCHAR(100) NOT NULL,
-    status VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    description TEXT,
+    requirements TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'OPEN',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
--- Índices para melhorar performance de consultas
-CREATE INDEX idx_job_vacancies_status ON job_vacancies(status);
-CREATE INDEX idx_job_vacancies_location ON job_vacancies(location);
-CREATE INDEX idx_job_vacancies_created_at ON job_vacancies(created_at); 
+-- Creating indexes
+CREATE INDEX IF NOT EXISTS idx_job_vacancies_status ON job_vacancies(status);
+CREATE INDEX IF NOT EXISTS idx_job_vacancies_created_at ON job_vacancies(created_at); 

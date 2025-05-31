@@ -75,7 +75,7 @@ CREATE TABLE benefits (
     description TEXT,
     start_date DATE NOT NULL,
     end_date DATE,
-    value DECIMAL(10,2) NOT NULL,
+    benefit_value DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES employees(id),
