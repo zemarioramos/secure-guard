@@ -13,6 +13,8 @@ import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.model.enums.NotificationStatus;
 import com.z7design.secured_guard.model.enums.NotificationType;
 import com.z7design.secured_guard.repository.NotificationRepository;
+import com.z7design.secured_guard.model.Contract;
+import com.z7design.secured_guard.model.JobVacancy;
 
 import lombok.RequiredArgsConstructor;
 
@@ -86,5 +88,40 @@ public class NotificationService {
         if (notification.getMessage() == null || notification.getMessage().trim().isEmpty()) {
             throw new IllegalArgumentException("Notification message is required");
         }
+    }
+    
+    public void notifyContractCreated(Contract contract) {
+        // TODO: Implementar notificações para diferentes setores
+        // - RH
+        // - Administrativo
+        // - Operacional
+        // - Setor de Contratos
+    }
+    
+    public void notifyContractUpdated(Contract contract) {
+        // TODO: Implementar notificações para diferentes setores
+    }
+    
+    public void notifyContractExpiring(Contract contract) {
+        // TODO: Implementar notificações para diferentes setores
+    }
+    
+    public void notifyProposalCreated(Contract contract) {
+        // TODO: Implementar notificações para diferentes setores
+    }
+    
+    public void notifyProposalUpdated(Contract contract) {
+        // TODO: Implementar notificações para diferentes setores
+    }
+    
+    public void notifyNewJobVacancy(JobVacancy jobVacancy) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.JOB_VACANCY)
+                .title("Nova Vaga Disponível")
+                .message("Uma nova vaga foi publicada: " + jobVacancy.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
     }
 } 

@@ -3,9 +3,8 @@ package com.z7design.secured_guard.model;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,33 +13,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "trainings")
-public class Training {
+@Table(name = "clients")
+public class Client {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
+    @Column(name = "company_name", nullable = false)
+    private String companyName;
+    
+    @Column(nullable = false, unique = true)
+    private String cnpj;
+    
     @Column(nullable = false)
-    private String name;
+    private String address;
     
     @Column
-    private String description;
+    private String phone;
     
     @Column
-    private String provider;
+    private String whatsapp;
     
     @Column
-    private Integer duration;
+    private String email;
     
-    @OneToMany(mappedBy = "training")
-    @JsonIgnoreProperties("training")
-    @Builder.Default
-    private List<EmployeeCertification> certifications = new ArrayList<>();
+    @Column(name = "responsible_person")
+    private String responsiblePerson;
+    
+    @Column
+    private String contact;
+    
+    @OneToMany(mappedBy = "client")
+    @JsonManagedReference
+    private List<Contract> contracts;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

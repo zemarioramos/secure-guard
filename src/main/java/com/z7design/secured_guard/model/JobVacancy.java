@@ -1,11 +1,8 @@
 package com.z7design.secured_guard.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,33 +11,43 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "trainings")
-public class Training {
+@Table(name = "job_vacancies")
+public class JobVacancy {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
     @Column(nullable = false)
-    private String name;
+    private String title;
     
-    @Column
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     
-    @Column
-    private String provider;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String requirements;
     
-    @Column
-    private Integer duration;
+    @Column(nullable = false)
+    private String department;
     
-    @OneToMany(mappedBy = "training")
-    @JsonIgnoreProperties("training")
-    @Builder.Default
-    private List<EmployeeCertification> certifications = new ArrayList<>();
+    @Column(nullable = false)
+    private String position;
+    
+    @Column(nullable = false)
+    private Integer quantity;
+    
+    @Column(name = "salary_range", nullable = false)
+    private String salaryRange;
+    
+    @Column(nullable = false)
+    private String status;
+    
+    @Column(nullable = false)
+    private LocalDate deadline;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

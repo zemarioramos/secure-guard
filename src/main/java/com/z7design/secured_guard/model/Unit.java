@@ -51,21 +51,26 @@ public class Unit {
     
     @OneToMany(mappedBy = "parent")
     @JsonIgnoreProperties("parent")
+    @Builder.Default
     private List<Unit> children = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties("unit")
+    @Builder.Default
     private List<Employee> employees = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties("unit")
+    @Builder.Default
     private List<Position> positions = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
     @JsonIgnoreProperties({"position", "unit", "documents", "benefits", "scaleHistory", "occurrences", "payrolls", "epis"})
+    @Builder.Default
     private List<Payroll> payrolls = new ArrayList<>();
     
     @OneToMany(mappedBy = "unit")
+    @Builder.Default
     private List<Location> locations = new ArrayList<>();
     
     @Column(name = "created_at")

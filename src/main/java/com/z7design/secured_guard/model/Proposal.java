@@ -1,11 +1,11 @@
 package com.z7design.secured_guard.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.z7design.secured_guard.model.enums.ProposalStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,33 +14,40 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "trainings")
-public class Training {
+@Table(name = "proposals")
+public class Proposal {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
+    @Column(name = "proposal_number", nullable = false, unique = true)
+    private String proposalNumber;
+    
+    @Column(name = "contract_id")
+    private UUID contractId;
+    
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String name;
+    private ProposalStatus status;
+    
+    @Column(nullable = false)
+    private BigDecimal value;
     
     @Column
     private String description;
     
-    @Column
-    private String provider;
+    @Column(nullable = false)
+    private LocalDateTime validity;
     
-    @Column
-    private Integer duration;
-    
-    @OneToMany(mappedBy = "training")
-    @JsonIgnoreProperties("training")
-    @Builder.Default
-    private List<EmployeeCertification> certifications = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "contract_id")
+    @JsonBackReference
+    private Contract contract;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

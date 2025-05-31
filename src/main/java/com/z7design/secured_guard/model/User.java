@@ -59,9 +59,11 @@ public class User implements UserDetails {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
     
     @Column(nullable = false)
+    @Builder.Default
     private boolean active = true;
     
     @CreationTimestamp

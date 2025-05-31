@@ -44,14 +44,17 @@ public class Position {
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
+    @Builder.Default
     private List<Employee> employees = new ArrayList<>();
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
+    @Builder.Default
     private List<Benefit> benefits = new ArrayList<>();
     
     @OneToMany(mappedBy = "position")
     @JsonIgnoreProperties("position")
+    @Builder.Default
     private List<EPI> epis = new ArrayList<>();
     
     @CreationTimestamp
