@@ -14,7 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.UUID;
 
-@Slf4j
+@Slf4j  // Adicionar esta anotação
 @Service
 @RequiredArgsConstructor
 public class FileUploadService {

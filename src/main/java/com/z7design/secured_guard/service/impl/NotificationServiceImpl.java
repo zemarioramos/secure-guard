@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.z7design.secured_guard.exception.ResourceNotFoundException;
+import com.z7design.secured_guard.model.Contract;
+import com.z7design.secured_guard.model.JobVacancy;
 import com.z7design.secured_guard.model.Notification;
 import com.z7design.secured_guard.model.User;
 import com.z7design.secured_guard.model.enums.NotificationStatus;
@@ -51,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     @Transactional
-    public Notification markAsRead(Long id) {
+    public Notification markAsRead(UUID id) {
         Notification notification = findById(id);
         notification.setStatus(NotificationStatus.READ);
         notification.setReadAt(LocalDateTime.now());
@@ -60,7 +62,7 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     @Transactional
-    public Notification markAsUnread(Long id) {
+    public Notification markAsUnread(UUID id) {
         Notification notification = findById(id);
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setReadAt(null);
@@ -69,20 +71,20 @@ public class NotificationServiceImpl implements NotificationService {
     
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         Notification notification = findById(id);
         notificationRepository.delete(notification);
     }
     
     @Override
-    public Notification findById(Long id) {
+    public Notification findById(UUID id) {
         return notificationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
     }
     
     @Override
     public List<Notification> findByUserId(UUID userId) {
-        return notificationRepository.findByUserId(userId);
+        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
     
     @Override
@@ -154,6 +156,12 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.saveAll(notifications);
     }
     
+    @Override
+    @Transactional
+    public Notification save(Notification notification) {
+        return notificationRepository.save(notification);
+    }
+    
     private void validateNotification(Notification notification) {
         if (notification.getUser() == null) {
             throw new IllegalArgumentException("User is required for notification");
@@ -164,5 +172,77 @@ public class NotificationServiceImpl implements NotificationService {
         if (notification.getMessage() == null || notification.getMessage().trim().isEmpty()) {
             throw new IllegalArgumentException("Message is required for notification");
         }
+    }
+    
+    @Override
+    public void notifyContractCreated(Contract contract) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.CONTRACT_CREATED)
+                .title("Novo Contrato Criado")
+                .message("Um novo contrato foi criado: " + contract.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
+    }
+    
+    @Override
+    public void notifyContractUpdated(Contract contract) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.CONTRACT_UPDATED)
+                .title("Contrato Atualizado")
+                .message("O contrato foi atualizado: " + contract.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
+    }
+    
+    @Override
+    public void notifyContractExpiring(Contract contract) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.CONTRACT_EXPIRING)
+                .title("Contrato Expirando")
+                .message("O contrato está próximo de expirar: " + contract.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
+    }
+    
+    @Override
+    public void notifyProposalCreated(Contract contract) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.CONTRACT_CREATED)
+                .title("Nova Proposta Criada")
+                .message("Uma nova proposta foi criada para o contrato: " + contract.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
+    }
+    
+    @Override
+    public void notifyProposalUpdated(Contract contract) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.CONTRACT_UPDATED)
+                .title("Proposta Atualizada")
+                .message("A proposta foi atualizada para o contrato: " + contract.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
+    }
+    
+    @Override
+    public void notifyNewJobVacancy(JobVacancy jobVacancy) {
+        Notification notification = Notification.builder()
+                .type(NotificationType.JOB_VACANCY)
+                .title("Nova Vaga Disponível")
+                .message("Uma nova vaga foi publicada: " + jobVacancy.getTitle())
+                .status(NotificationStatus.UNREAD)
+                .build();
+        
+        notificationRepository.save(notification);
     }
 }

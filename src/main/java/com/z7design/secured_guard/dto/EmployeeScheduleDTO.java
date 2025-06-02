@@ -1,9 +1,11 @@
 package com.z7design.secured_guard.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 public class EmployeeScheduleDTO {
     private UUID id;
     private UUID scheduleId;

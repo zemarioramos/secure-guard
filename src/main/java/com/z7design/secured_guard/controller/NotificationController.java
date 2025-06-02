@@ -36,23 +36,23 @@ public class NotificationController {
     }
     
     @PutMapping("/{id}/read")
-    public ResponseEntity<Notification> markAsRead(@PathVariable Long id) {
+    public ResponseEntity<Notification> markAsRead(@PathVariable UUID id) {
         return ResponseEntity.ok(notificationService.markAsRead(id));
     }
     
     @PutMapping("/{id}/unread")
-    public ResponseEntity<Notification> markAsUnread(@PathVariable Long id) {
+    public ResponseEntity<Notification> markAsUnread(@PathVariable UUID id) {
         return ResponseEntity.ok(notificationService.markAsUnread(id));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         notificationService.delete(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Notification> findById(@PathVariable Long id) {
+    public ResponseEntity<Notification> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(notificationService.findById(id));
     }
     
@@ -75,8 +75,24 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.findByUserIdAndType(userId, type));
     }
     
+    @GetMapping("/user/{userId}/unread")
+    public ResponseEntity<List<Notification>> getUnreadNotifications(@PathVariable UUID userId) {
+        return ResponseEntity.ok(notificationService.getUnreadNotifications(userId));
+    }
+    
+    @PutMapping("/user/{userId}/read-all")
+    public ResponseEntity<Void> markAllAsRead(@PathVariable UUID userId) {
+        notificationService.markAllAsRead(userId);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/user/{userId}/count/unread")
+    public ResponseEntity<Long> countUnreadNotifications(@PathVariable UUID userId) {
+        return ResponseEntity.ok(notificationService.countUnreadByUserId(userId));
+    }
+    
     @GetMapping("/date-range")
-    public ResponseEntity<List<Notification>> findByCreatedAtBetween(
+    public ResponseEntity<List<Notification>> findByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return ResponseEntity.ok(notificationService.findByCreatedAtBetween(startDate, endDate));

@@ -7,8 +7,12 @@ import java.util.UUID;
 import com.z7design.secured_guard.model.enums.ProposalStatus;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProposalDTO {
     private UUID id;
     private String proposalNumber;
@@ -19,4 +23,4 @@ public class ProposalDTO {
     private UUID contractId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-} 
+}

@@ -4,161 +4,38 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import com.z7design.secured_guard.exception.ResourceNotFoundException;
-import com.z7design.secured_guard.model.Notification;
-import com.z7design.secured_guard.model.User;
-import com.z7design.secured_guard.model.enums.NotificationStatus;
-import com.z7design.secured_guard.model.enums.NotificationType;
-import com.z7design.secured_guard.repository.NotificationRepository;
 import com.z7design.secured_guard.model.Contract;
 import com.z7design.secured_guard.model.JobVacancy;
+import com.z7design.secured_guard.model.Notification;
+import com.z7design.secured_guard.model.enums.NotificationStatus;
+import com.z7design.secured_guard.model.enums.NotificationType;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-
-@Service
-@RequiredArgsConstructor
-public class NotificationService {
+public interface NotificationService {
+    Notification create(Notification notification);
+    Notification markAsRead(UUID id);
+    Notification markAsUnread(UUID id);
+    void delete(UUID id);
+    Notification findById(UUID id);
+    List<Notification> findByUserId(UUID userId);
+    List<Notification> findByUserIdAndStatus(UUID userId, NotificationStatus status);
+    List<Notification> findByUserIdAndType(UUID userId, NotificationType type);
+    List<Notification> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    Page<Notification> findByUserId(UUID userId, Pageable pageable);
+    List<Notification> findUnreadByUserId(UUID userId);
+    Long countUnreadByUserId(UUID userId);
+    void createSystemNotification(String title, String message, NotificationType type);
+    List<Notification> getUnreadNotifications(UUID userId);
+    void markAllAsRead(UUID userId);
+    Notification save(Notification notification);
     
-    private final NotificationRepository notificationRepository;
-    private final UserService userService;
-    
-    @Transactional
-    public Notification create(Notification notification) {
-        validateNotification(notification);
-        notification.setStatus(NotificationStatus.UNREAD);
-        notification.setCreatedAt(LocalDateTime.now());
-        return notificationRepository.save(notification);
-    }
-    
-    @Transactional
-    public Notification markAsRead(Long id) {
-        Notification notification = findById(id);
-        notification.setStatus(NotificationStatus.READ);
-        notification.setReadAt(LocalDateTime.now());
-        return notificationRepository.save(notification);
-    }
-    
-    @Transactional
-    public Notification markAsUnread(Long id) {
-        Notification notification = findById(id);
-        notification.setStatus(NotificationStatus.UNREAD);
-        notification.setReadAt(null);
-        return notificationRepository.save(notification);
-    }
-    
-    @Transactional
-    public void delete(Long id) {
-        Notification notification = findById(id);
-        notificationRepository.delete(notification);
-    }
-    
-    public Notification findById(Long id) {
-        return notificationRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
-    }
-    
-    public List<Notification> findByUserId(UUID userId) {
-        return notificationRepository.findByUserId(userId);
-    }
-    
-    public List<Notification> findByUserIdAndStatus(UUID userId, NotificationStatus status) {
-        return notificationRepository.findByUserIdAndStatus(userId, status);
-    }
-    
-    public List<Notification> findByUserIdAndType(UUID userId, NotificationType type) {
-        return notificationRepository.findByUserIdAndType(userId, type);
-    }
-    
-    public List<Notification> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        return notificationRepository.findByCreatedAtBetween(startDate, endDate);
-    }
-    
-    private void validateNotification(Notification notification) {
-        if (notification.getUser() == null) {
-            throw new IllegalArgumentException("User is required");
-        }
-        
-        if (notification.getType() == null) {
-            throw new IllegalArgumentException("Notification type is required");
-        }
-        
-        if (notification.getMessage() == null || notification.getMessage().trim().isEmpty()) {
-            throw new IllegalArgumentException("Notification message is required");
-        }
-    }
-    
-    public void notifyContractCreated(Contract contract) {
-        // TODO: Implementar notificações para diferentes setores
-        // - RH
-        // - Administrativo
-        // - Operacional
-        // - Setor de Contratos
-    }
-    
-    public void notifyContractUpdated(Contract contract) {
-        // TODO: Implementar notificações para diferentes setores
-    }
-    
-    public void notifyContractExpiring(Contract contract) {
-        // TODO: Implementar notificações para diferentes setores
-    }
-    
-    public void notifyProposalCreated(Contract contract) {
-        // TODO: Implementar notificações para diferentes setores
-    }
-    
-    public void notifyProposalUpdated(Contract contract) {
-        // TODO: Implementar notificações para diferentes setores
-    }
-    
-    public void notifyNewJobVacancy(JobVacancy jobVacancy) {
-        Notification notification = Notification.builder()
-                .type(NotificationType.JOB_VACANCY)
-                .title("Nova Vaga Disponível")
-                .message("Uma nova vaga foi publicada: " + jobVacancy.getTitle())
-                .status(NotificationStatus.UNREAD)
-                .build();
-        
-        notificationRepository.save(notification);
-    }
-
-    public List<Notification> getUnreadNotifications(UUID userId) {
-        return notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
-    }
-
-    public void markAllAsRead(UUID userId) {
-        List<Notification> notifications = notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
-        for (Notification notification : notifications) {
-            notification.setStatus(NotificationStatus.READ);
-            notification.setReadAt(LocalDateTime.now());
-        }
-        notificationRepository.saveAll(notifications);
-    }
-
-    public Page<Notification> findByUserId(UUID userId, Pageable pageable) {
-        return notificationRepository.findByUserId(userId, pageable);
-    }
-
-    public List<Notification> findUnreadByUserId(UUID userId) {
-        return notificationRepository.findByUserIdAndStatus(userId, NotificationStatus.UNREAD);
-    }
-
-    public Long countUnreadByUserId(UUID userId) {
-        return notificationRepository.countByUserIdAndStatus(userId, NotificationStatus.UNREAD);
-    }
-
-    public void createSystemNotification(String title, String message, NotificationType type) {
-        Notification notification = Notification.builder()
-                .title(title)
-                .message(message)
-                .type(type)
-                .status(NotificationStatus.UNREAD)
-                .build();
-        notificationRepository.save(notification);
-    }
+    // Business specific notifications
+    void notifyContractCreated(Contract contract);
+    void notifyContractUpdated(Contract contract);
+    void notifyContractExpiring(Contract contract);
+    void notifyProposalCreated(Contract contract);
+    void notifyProposalUpdated(Contract contract);
+    void notifyNewJobVacancy(JobVacancy jobVacancy);
 } 

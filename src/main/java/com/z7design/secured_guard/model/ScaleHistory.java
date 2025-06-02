@@ -4,6 +4,8 @@ import com.z7design.secured_guard.model.enums.ScheduleStatus;
 import com.z7design.secured_guard.model.enums.Shift;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +16,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "scale_histories")
 public class ScaleHistory {
@@ -45,4 +49,4 @@ public class ScaleHistory {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-} 
+}

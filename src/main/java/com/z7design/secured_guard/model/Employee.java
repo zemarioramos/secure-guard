@@ -16,14 +16,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import com.z7design.secured_guard.model.enums.EmploymentStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "employees")
 @NoArgsConstructor
@@ -110,38 +112,148 @@ public class Employee {
     @Column(name = "current_scale")
     private String currentScale;
 
-    // Documentos
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Document> documents = new ArrayList<>();
+    // Relacionamentos
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference("employee-time-records")
+    private List<TimeRecord> timeRecords = new ArrayList<>();
 
-    // Benefícios
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Benefit> benefits = new ArrayList<>();
-
-    // Histórico de Escalas
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Schedule> schedules = new ArrayList<>();
 
-    // Ocorrências
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Occurrence> occurrences = new ArrayList<>();
+    private List<Vacation> vacations = new ArrayList<>();
 
-    // Holerites
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @JsonManagedReference("employee-payrolls")
-    private List<Payroll> payrolls = new ArrayList<>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Leave> leaves = new ArrayList<>();
 
-    // EPIs
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Overtime> overtimes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<EmployeeCertification> certifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Dependent> dependents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Document> documents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<EPI> epis = new ArrayList<>();
 
-    // Time Records
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @JsonManagedReference("employee-time-records")
-    private List<TimeRecord> timeRecords = new ArrayList<>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Occurrence> occurrences = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<PerformanceEvaluation> performanceEvaluations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference("employee-payrolls")
+    private List<Payroll> payrolls = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Benefit> benefits = new ArrayList<>();
+
+    // Getters para relacionamentos (garantindo Lazy Loading)
+    public List<TimeRecord> getTimeRecords() {
+        if (timeRecords == null) {
+            timeRecords = new ArrayList<>();
+        }
+        return timeRecords;
+    }
+
+    public List<Schedule> getSchedules() {
+        if (schedules == null) {
+            schedules = new ArrayList<>();
+        }
+        return schedules;
+    }
+
+    public List<Vacation> getVacations() {
+        if (vacations == null) {
+            vacations = new ArrayList<>();
+        }
+        return vacations;
+    }
+
+    public List<Leave> getLeaves() {
+        if (leaves == null) {
+            leaves = new ArrayList<>();
+        }
+        return leaves;
+    }
+
+    public List<Overtime> getOvertimes() {
+        if (overtimes == null) {
+            overtimes = new ArrayList<>();
+        }
+        return overtimes;
+    }
+
+    public List<EmployeeCertification> getCertifications() {
+        if (certifications == null) {
+            certifications = new ArrayList<>();
+        }
+        return certifications;
+    }
+
+    public List<Dependent> getDependents() {
+        if (dependents == null) {
+            dependents = new ArrayList<>();
+        }
+        return dependents;
+    }
+
+    public List<Document> getDocuments() {
+        if (documents == null) {
+            documents = new ArrayList<>();
+        }
+        return documents;
+    }
+
+    public List<EPI> getEpis() {
+        if (epis == null) {
+            epis = new ArrayList<>();
+        }
+        return epis;
+    }
+
+    public List<Occurrence> getOccurrences() {
+        if (occurrences == null) {
+            occurrences = new ArrayList<>();
+        }
+        return occurrences;
+    }
+
+    public List<PerformanceEvaluation> getPerformanceEvaluations() {
+        if (performanceEvaluations == null) {
+            performanceEvaluations = new ArrayList<>();
+        }
+        return performanceEvaluations;
+    }
+
+    public List<Payroll> getPayrolls() {
+        if (payrolls == null) {
+            payrolls = new ArrayList<>();
+        }
+        return payrolls;
+    }
+
+    public List<Benefit> getBenefits() {
+        if (benefits == null) {
+            benefits = new ArrayList<>();
+        }
+        return benefits;
+    }
 } 

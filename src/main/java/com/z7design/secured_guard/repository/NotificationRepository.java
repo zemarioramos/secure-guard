@@ -17,7 +17,7 @@ import com.z7design.secured_guard.model.enums.NotificationStatus;
 import com.z7design.secured_guard.model.enums.NotificationType;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, UUID> {
     
     List<Notification> findByUserId(UUID userId);
     
